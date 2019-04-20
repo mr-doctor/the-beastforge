@@ -16,18 +16,19 @@ class App extends Component {
 			gender: "",
 			size: "",
 			type: "",
+			customType: "",
 			AC: "0",
 			HPDice: 0,
 			HPDiceType: 4,
 			HP: 0,
 			HPFormat: "0",
 			abilityScores: {
-				str: 0,
-				dex: 0,
-				con: 0,
-				int: 0,
-				wis: 0,
-				cha: 0,
+				str: 10,
+				dex: 10,
+				con: 10,
+				int: 10,
+				wis: 10,
+				cha: 10,
 			},
 			savingThrows: {
 				strSv: 0,
@@ -37,12 +38,14 @@ class App extends Component {
 				wisSv: 0,
 				chaSv: 0,
 			},
-			walk: 30,
-			swim: 0,
-			fly: 0,
-			climb: 0,
-			burrow: 0,
-			hover: false,
+			speeds: {
+				walk: 30,
+				swim: 0,
+				fly: 0,
+				climb: 0,
+				burrow: 0,
+				hover: false,
+			},
 		};
 	}
 
@@ -108,7 +111,7 @@ class App extends Component {
 								</Form.Control>
 							</Col>
 							<Col>
-								<CustomType monsterType={this.state.type}> </CustomType>
+								<CustomType monsterType={this.state.type} onChange={this.changeType}> </CustomType>
 							</Col>
 						</Form.Row>
 					</Form.Group>
@@ -194,13 +197,13 @@ class App extends Component {
 								<Form.Label>Walk</Form.Label>
 							</Col>
 							<Col>
-								<Form.Control id="walk-speed" type="number" step={1} value={this.state.walk} onChange={this.changeSpeed}/>
+								<Form.Control id="walk" type="number" step={1} value={this.state.speeds.walk} onChange={this.changeSpeed}/>
 							</Col>
 							<Col>
 								<Form.Label>Burrow</Form.Label>
 							</Col>
 							<Col>
-								<Form.Control id="burrow-speed" type="number" step={1} value={this.state.burrow} onChange={this.changeSpeed}/>
+								<Form.Control id="burrow" type="number" step={1} value={this.state.speeds.burrow} onChange={this.changeSpeed}/>
 							</Col>
 						</Form.Row>
 						<Form.Row>
@@ -208,13 +211,13 @@ class App extends Component {
 								<Form.Label>Swim</Form.Label>
 							</Col>
 							<Col>
-								<Form.Control id="swim-speed" type="number" step={1} value={this.state.swim} onChange={this.changeSpeed}/>
+								<Form.Control id="swim" type="number" step={1} value={this.state.speeds.swim} onChange={this.changeSpeed}/>
 							</Col>
 							<Col>
 								<Form.Label>Climb</Form.Label>
 							</Col>
 							<Col>
-								<Form.Control id="climb-speed" type="number" step={1} value={this.state.climb} onChange={this.changeSpeed}/>
+								<Form.Control id="climb" type="number" step={1} value={this.state.speeds.climb} onChange={this.changeSpeed}/>
 							</Col>
 						</Form.Row>
 						<Form.Row>
@@ -222,10 +225,124 @@ class App extends Component {
 								<Form.Label>Fly</Form.Label>
 							</Col>
 							<Col>
-								<Form.Control id="fly-speed" type="number" step={1} value={this.state.fly} onChange={this.changeSpeed}/>
+								<Form.Control id="fly" type="number" step={1} value={this.state.speeds.fly} onChange={this.changeSpeed}/>
 							</Col>
 							<Col>
 								<Form.Check type="checkbox" label="Hover" id="hover" onChange={this.changeSpeed}/>
+							</Col>
+						</Form.Row>
+					</Form.Group>
+				</Form>
+
+				<h2>Ability Scores</h2>
+
+				<Form>
+					<Form.Group>
+					<Form.Row>
+							<Col>
+								<Form.Label>STR</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>DEX</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>CON</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>INT</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>WIS</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>CHA</Form.Label>
+							</Col>
+						</Form.Row>
+						<Form.Row>
+							<Col>
+								<Form.Control id="str" type="number" step={1} value={this.state.abilityScores.str} onChange={this.changeAS} />
+							</Col>
+							<Col>
+								<Form.Control id="dex" type="number" step={1} value={this.state.abilityScores.dex} onChange={this.changeAS} />
+							</Col>
+							<Col>
+								<Form.Control id="con" type="number" step={1} value={this.state.abilityScores.con} onChange={this.changeAS} />
+							</Col>
+							<Col>
+								<Form.Control id="int" type="number" step={1} value={this.state.abilityScores.int} onChange={this.changeAS} />
+							</Col>
+							<Col>
+								<Form.Control id="wis" type="number" step={1} value={this.state.abilityScores.wis} onChange={this.changeAS} />
+							</Col>
+							<Col>
+								<Form.Control id="cha" type="number" step={1} value={this.state.abilityScores.cha} onChange={this.changeAS} />
+							</Col>
+						</Form.Row>
+						<Form.Row>
+							<Col>
+								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.str)} readOnly/>
+							</Col>
+							<Col>
+								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.dex)} readOnly/>
+							</Col>
+							<Col>
+								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.con)} readOnly/>
+							</Col>
+							<Col>
+								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.int)} readOnly/>
+							</Col>
+							<Col>
+								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.wis)} readOnly/>
+							</Col>
+							<Col>
+								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.cha)} readOnly/>
+							</Col>
+						</Form.Row>
+					</Form.Group>
+				</Form>
+
+				<h2>Saving Throws</h2>
+
+				<Form>
+					<Form.Group>
+					<Form.Row>
+							<Col>
+								<Form.Label>STR</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>DEX</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>CON</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>INT</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>WIS</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>CHA</Form.Label>
+							</Col>
+						</Form.Row>
+						<Form.Row>
+							<Col>
+								<Form.Control id="str" type="number" step={1} value={this.state.savingThrows.str} onChange={this.changeSv} />
+							</Col>
+							<Col>
+								<Form.Control id="dex" type="number" step={1} value={this.state.savingThrows.dex} onChange={this.changeSv} />
+							</Col>
+							<Col>
+								<Form.Control id="con" type="number" step={1} value={this.state.savingThrows.con} onChange={this.changeSv} />
+							</Col>
+							<Col>
+								<Form.Control id="int" type="number" step={1} value={this.state.savingThrows.int} onChange={this.changeSv} />
+							</Col>
+							<Col>
+								<Form.Control id="wis" type="number" step={1} value={this.state.savingThrows.wis} onChange={this.changeSv} />
+							</Col>
+							<Col>
+								<Form.Control id="cha" type="number" step={1} value={this.state.savingThrows.cha} onChange={this.changeSv} />
 							</Col>
 						</Form.Row>
 					</Form.Group>
@@ -240,29 +357,26 @@ class App extends Component {
 		console.log(this.state);
 	}
 
-	changeSpeed = (e) => {
-		let speedType = e.target.id;
-		let hover2 = this.state.hover;
-		switch (speedType) {
-			case "walk-speed":
-				this.setState({ walk: e.target.value});
-				break;
-			case "fly-speed":
-				this.setState({ fly: e.target.value});
-				break;
-			case "swim-speed":
-				this.setState({ swim: e.target.value});
-				break;
-			case "climb-speed":
-				this.setState({ climb: e.target.value});
-				break;
-			case "burrow-speed":
-				this.setState({ burrow: e.target.value});
-				break;
-			case "hover":
-				this.setState({ hover: !hover2});
-				break;
+	changeAS = (e) => {
+		if (e.target.value < 0) {
+			return;
 		}
+		let scoresTemp = {...this.state.abilityScores}
+		scoresTemp[e.target.id] = e.target.value;
+		this.setState({ abilityScores: scoresTemp });
+	}
+
+	changeSpeed = (e) => {
+		if (e.target.value < 0) {
+			return;
+		}
+		let speedsTemp = {...this.state.speeds}
+		if ("hover".localeCompare(e.target.id) === 0) {
+			speedsTemp.hover = !speedsTemp.hover;
+		} else {
+			speedsTemp[e.target.id] = e.target.value;
+		}
+		this.setState({ speeds: speedsTemp });
 	}
 
 	changeGender = (e) => {
@@ -273,8 +387,17 @@ class App extends Component {
 		this.setState({ size: e });
 	};
 
-	changeType = () => {
-		this.setState({type: document.getElementById("monster-type").value});
+	changeType = (e) => {
+		if (this.equals(e.target.id, "monster-type")) {
+			this.setState( {type: e.target.value });
+		} else if (this.equals(this.state.type, "Custom Type")) {
+			this.setState( {customType: e.target.value });
+		}
+		
+	}
+
+	equals(str1, str2) {
+		return str1.localeCompare(str2) === 0;
 	}
 
 	changeAC = (e) => {
@@ -302,7 +425,7 @@ class App extends Component {
 				"d" + 
 				diceType + 
 				" + " + 
-				(Math.max(0, this.calculateMod(con)) * (dice + 1)) + 
+				(Math.max(0, this.calculateMod(con)) * (dice)) + 
 				")";
 	}
 
@@ -326,19 +449,23 @@ class App extends Component {
 
 	roll(dice, diceType, con) {
 		let hpBase = this.getRandomInt(dice, dice * diceType);
-
-		return hpBase + (con * dice);
+		return hpBase + (Math.max(0, this.calculateMod(con)) * dice);
 	}
 
 	calculate(dice, diceType, con) {
 		return ((diceType / 2 + Math.max(0, this.calculateMod(con))) * dice)
 	}
 
+	formatMod(score) {
+		let mod = this.calculateMod(score);
+		return ((mod > 0) ? "+" : "") + mod;
+	}
+
 	calculateMod(score) {
 		return Math.floor((score - 10) / 2);
 	}
 
-	getRandomInt(min, max) {
+	getRandomInt(min, max) { 
 		min = Math.ceil(min);
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min;

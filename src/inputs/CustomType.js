@@ -5,7 +5,7 @@ class CustomType extends Component {
 	render() {
 		if ("Custom Type".localeCompare(this.props.monsterType) === 0) {
 			return (
-				<Form.Control type="text" placeholder="Define custom type"/>
+				<Form.Control onChange={this.props.onChange} type="text" placeholder={"Define custom type"}/>
 			);
 		} else {
 			return (<br></br>);
