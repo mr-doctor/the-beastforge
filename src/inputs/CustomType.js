@@ -3,9 +3,9 @@ import Form from 'react-bootstrap/Form';
 
 class CustomType extends Component {
 	render() {
-		if ("Custom Type".localeCompare(this.props.monsterType) === 0) {
+		if (this.props.display) {
 			return (
-				<Form.Control onChange={this.props.onChange} type="text" placeholder={"Define custom type"}/>
+				<Form.Control onChange={this.props.onChange} type="text" placeholder={"Define custom"}/>
 			);
 		} else {
 			return (<br></br>);

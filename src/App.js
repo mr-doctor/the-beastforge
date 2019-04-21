@@ -46,6 +46,16 @@ class App extends Component {
 				burrow: 0,
 				hover: false,
 			},
+			senses: {
+				senseList: [],
+				senseType: "Darkvision",
+				customType: "",
+				senseDistance: 60,
+				blindBeyond: false,
+			},
+			languages: [],
+			language: "",
+			customLanguage: "",
 		};
 	}
 
@@ -111,7 +121,7 @@ class App extends Component {
 								</Form.Control>
 							</Col>
 							<Col>
-								<CustomType monsterType={this.state.type} onChange={this.changeType}> </CustomType>
+								<CustomType display={"Custom Type".localeCompare(this.props.monsterType) === 0} onChange={this.changeType}/>
 							</Col>
 						</Form.Row>
 					</Form.Group>
@@ -348,6 +358,84 @@ class App extends Component {
 					</Form.Group>
 				</Form>
 
+				<h2>Senses</h2>
+
+				<Form>
+					<Form.Group>
+					<Form.Row>
+							<Col>
+								<Form.Label>Sense</Form.Label>
+							</Col>
+							<Col>
+								<Form.Label>Distance</Form.Label>
+							</Col>
+							<Col>
+								<Form.Check type="checkbox" label="Blind Beyond" id="hover" onChange={this.changeSpeed}/>
+							</Col>
+						</Form.Row>
+						<Form.Row>
+							<Col>
+								<Form.Control id="sense-select" as="select" onChange={this.changeSenseType}>
+									<option>Darkvision</option>
+									<option>Blindsight</option>
+									<option>Tremorsense</option>
+									<option>Truesight</option>
+									<option>Custom Type</option>
+								</Form.Control>
+								<CustomType display={"Custom Type".localeCompare(this.state.senses.senseType) === 0} onChange={this.changeSenseType}/>
+							</Col>
+							<Col>
+								<Form.Control id="senseDistance" type="number" step={1} value={this.state.senses.senseDistance} onChange={this.changeSenseDistance} />
+							</Col>
+							<Col>
+								<Button onClick={this.addSense}>Add</Button>
+							</Col>
+						</Form.Row>
+					</Form.Group>
+				</Form>
+
+				<h2>Languages</h2>
+
+				<Form>
+					<Form.Group>
+					<Form.Row>
+							<Col>
+								<Form.Label>Language</Form.Label>
+							</Col>
+						</Form.Row>
+						<Form.Row>
+							<Col>
+								<Form.Control id="language-select" as="select" onChange={this.changeLanguage}>
+									<option>Abyssal</option>
+									<option>Aquan</option>
+									<option>Celestial</option>
+									<option>Common</option>
+									<option>Deep Speech</option>
+									<option>Draconic</option>
+									<option>Druidic</option>
+									<option>Dwarvish</option>
+									<option>Elvish</option>
+									<option>Giant</option>
+									<option>Gnomish</option>
+									<option>Goblin</option>
+									<option>Gnoll</option>
+									<option>Infernal</option>
+									<option>Orc</option>
+									<option>Primordial</option>
+									<option>Sylvan</option>
+									<option>Undercommon</option>
+									<option>Custom Type</option>
+								</Form.Control>
+								<CustomType display={"Custom Type".localeCompare(this.state.language) === 0} onChange={this.changeLanguage}/>
+							</Col>
+							<Col>
+								<Button onClick={this.addLanguage}>Add</Button>
+							</Col>
+						</Form.Row>
+					</Form.Group>
+				</Form>
+
+
 				<Button onClick={this.debugButton}>Debug</Button>
 			</div>
 		);
@@ -355,6 +443,58 @@ class App extends Component {
 
 	debugButton = () => {
 		console.log(this.state);
+	}
+
+	changeLanguage = (e) => {
+		if (this.equals(e.target.id, "language-select")) {
+			this.setState( {language: e.target.value });
+		} else if (this.equals(this.state.language, "Custom Type")) {
+			this.setState( {customLanguage: e.target.value });
+		}
+	}
+
+	addLanguage = () => {
+		let langTemp = [...this.state.languages];
+
+		let lang = (this.equals("Custom Type", this.state.language) ? this.state.customLanguage : this.state.language);
+
+		langTemp.push(lang);
+
+		this.setState({ languages: langTemp });
+	}
+
+	addSense = () => {
+		let senseTemp = {...this.state.senses}
+		let type = (this.equals("Custom Type", senseTemp.senseType) ? senseTemp.customType : senseTemp.senseType);
+		let newSense = {
+			name: type,
+			distance: senseTemp.senseDistance,
+			blindBeyond: senseTemp.blindBeyond,
+		}
+
+		senseTemp.senseList.push(newSense);
+
+		this.setState({ senses: senseTemp })
+	}
+
+	changeSenseType = (e) => {
+		let senseTemp = {...this.state.senses}
+		if (this.equals(e.target.id, "sense-select")) {
+			senseTemp.senseType = e.target.value;
+		} else if (this.equals(senseTemp.senseType, "Custom Type")) {
+			senseTemp.customType = e.target.value;
+		}
+		this.setState({ senses: senseTemp });
+		
+	}
+
+	changeSenseDistance = (e) => {
+		if (e.target.value < 0) {
+			return;
+		}
+		let senseTemp = {...this.state.senses}
+		senseTemp.senseDistance = e.target.value;
+		this.setState({ senses: senseTemp });
 	}
 
 	changeAS = (e) => {
@@ -393,7 +533,6 @@ class App extends Component {
 		} else if (this.equals(this.state.type, "Custom Type")) {
 			this.setState( {customType: e.target.value });
 		}
-		
 	}
 
 	equals(str1, str2) {
