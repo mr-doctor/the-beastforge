@@ -9,6 +9,9 @@ class TypeSelect extends Component {
 				<Form.Group>
 					<Form.Row>
 						<Col>
+							<Form.Label>Type</Form.Label>
+						</Col>
+						<Col>
 							<Form.Control id="monster-type" as="select" onChange={this.props.onChange}>
 								<option>Aberration</option>
 								<option>Beast</option>

@@ -17,6 +17,8 @@ class GenderSelect extends Component {
 							<option>Neutral</option>
 						</Form.Control>
 					</Col>
+					<Col>
+					</Col>
 				</Form.Row>
 			</Form.Group>
 		);

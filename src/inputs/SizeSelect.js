@@ -20,6 +20,8 @@ class SizeSelect extends Component {
 								<option>Gargantuan</option>
 							</Form.Control>
 						</Col>
+						<Col>
+						</Col>
 					</Form.Row>
 				</Form.Group>
 		);

@@ -17,6 +17,9 @@ import Senses from './inputs/Senses';
 import LanguageSelect from './inputs/LanguageSelect';
 import Skills from './inputs/Skills';
 import ConditionMod from './inputs/ConditionMod';
+import Card from 'react-bootstrap/Card';
+import CardGroup from 'react-bootstrap/CardGroup';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 
 class App extends Component {
 
@@ -24,6 +27,7 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			monsterName: "",
 			alignment: "",
 			gender: "",
 			size: "",
@@ -87,74 +91,102 @@ class App extends Component {
 	}
 
 	render() {
-		return ( 
+		return (
 			<div className="App">
+				<CardGroup>
+					<Card>
+								<Form.Control type="text" placeholder="Monster Name" style={{textAlign: "center"}} onChange={this.changeName}/>
+								<CardGroup>
+									<Card>
+										<GenderSelect id="gender-select" onChange={this.changeGender} />
 
-					<Form.Control type="text" placeholder="Monster Name" />
+										<SizeSelect id="size-select" onChange={this.changeSize} />
 
-					<GenderSelect id="gender-select" onChange={this.changeGender}/>
+										<TypeSelect id="type-select" displayCustom={this.equals("Custom Type", this.state.type)} onChange={this.changeType} />
 
-					<SizeSelect id="size-select" onChange={this.changeSize}/>
+										<AlignmentSelect id="alignment-select" onChange={this.changeAlignment} />
 
-					<TypeSelect id="type-select" displayCustom={this.equals("Custom Type", this.state.type)} onChange={this.changeType}/>
+										<ChangeAC id="changeAC" value={this.state.AC} onChange={this.changeAC} />
 
-					<AlignmentSelect id="alignment-select" onChange={this.changeAlignment}/>
+										<ManageHP
+											HPDice={this.HPDice}
+											changeHPDice={this.changeHPDice}
+											changeHPDiceType={this.changeHPDiceType}
+											HPFormat={this.state.HPFormat}
+											generateHP={this.generateHP}
+											rollHP={this.rollHP}
+											/>
+									
+										<h2>Speeds</h2>
 
-					<ChangeAC id="changeAC" value={this.state.AC} onChange={this.changeAC}/>
-					
-					<ManageHP
-						HPDice={this.HPDice}
-						changeHPDice={this.changeHPDice} 
-						changeHPDiceType={this.changeHPDiceType} 
-						HPFormat={this.state.HPFormat}
-						generateHP={this.generateHP}
-						rollHP={this.rollHP}
-						/>
+										<Speeds speeds={this.state.speeds} onChange={this.changeSpeed} />
+									</Card>
+									<Card>
+									</Card>
+								</CardGroup>
 
-				<h2>Speeds</h2>
+								<CardGroup>
+									<Card>
+										<h2>Ability Scores</h2>
 
-				<Speeds speeds={this.state.speeds} onChange={this.changeSpeed}/>
+										<AbilityScores abilityScores={this.state.abilityScores} formatMod={this.formatMod} onChange={this.changeAS} />
 
-				<h2>Ability Scores</h2>
+										<h2>Saving Throws</h2>
 
-				<AbilityScores abilityScores={this.state.abilityScores} formatMod={this.formatMod} onChange={this.changeAS}/>
+										<SavingThrows savingThrows={this.state.savingThrows} onChange={this.changeSv} />
 
-				<h2>Saving Throws</h2>
+									</Card>
+									<Card>
+										<div className="container h-100">
+											<div className="row h-100 justify-content-center align-items-center">
+												<div id="col" className="col-12">
+													<ButtonGroup vertical>
+														<Button variant="outline-primary" style={{marginTop: "10px"}}>Add Ability</Button>
+														<Button variant="outline-info" style={{marginTop: "10px"}}>Add Spellcasting</Button>
+														<Button variant="outline-danger" style={{marginTop: "10px"}}>Add Action</Button>
+														<Button variant="outline-warning" style={{marginTop: "10px"}}>Add Legendary</Button>
+													</ButtonGroup>
+												</div>
+											</div>
+										</div>
+									</Card>
+								</CardGroup>
+								<h2>Senses</h2>
 
-				<SavingThrows savingThrows={this.state.savingThrows} onChange={this.changeSv}/>
-
-				<h2>Senses</h2>
-
-				<Senses senses={this.state.senses}
-						changeBlindBeyond={this.changeBlindBeyond}
-						changeSenseType={this.changeSenseType}
-						displayCustom={this.equals("Custom Type", this.state.senses.senseType)}
-						changeSenseDistance={this.changeSenseDistance}
-						addSense={this.addSense}
-						/>
-
-				<h2>Languages</h2>
-
-				<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
-								onChange={this.changeLanguage}
-								addLanguage={this.addLanguage}
+								<Senses senses={this.state.senses}
+									changeBlindBeyond={this.changeBlindBeyond}
+									changeSenseType={this.changeSenseType}
+									displayCustom={this.equals("Custom Type", this.state.senses.senseType)}
+									changeSenseDistance={this.changeSenseDistance}
+									addSense={this.addSense}
 								/>
 
-				<h2>Skills</h2>
+								<h2>Languages</h2>
 
-				<Skills skills={this.state.skills}
-						onChange={this.changeSkill}
-						addSkill={this.addSkill}
-						/>
-
-				<ConditionMod changeConditionImmunity={this.changeConditionImmunity}
-								changeDamageType={this.changeDamageType}
-								changeDamageModifier={this.changeDamageModifier}
-								addConditionImmunity={this.addConditionImmunity}
-								addDamageModifier={this.addDamageModifier}
+								<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
+									onChange={this.changeLanguage}
+									addLanguage={this.addLanguage}
 								/>
 
-				<Button onClick={this.debugButton}>Debug</Button>
+								<h2>Skills</h2>
+
+								<Skills skills={this.state.skills}
+									onChange={this.changeSkill}
+									addSkill={this.addSkill}
+								/>
+
+								<ConditionMod changeConditionImmunity={this.changeConditionImmunity}
+									changeDamageType={this.changeDamageType}
+									changeDamageModifier={this.changeDamageModifier}
+									addConditionImmunity={this.addConditionImmunity}
+									addDamageModifier={this.addDamageModifier}
+								/>
+
+								<Button onClick={this.debugButton}>Debug</Button>
+								</Card>
+							<Card>
+					</Card>
+				</CardGroup>
 			</div>
 		);
 	}
@@ -163,8 +195,12 @@ class App extends Component {
 		console.log(this.state);
 	}
 
+	changeName = (e) => {
+		this.setState({ monsterName: e.target.value })
+	}
+
 	changeConditionImmunity = (e) => {
-		this.setState( { condition: e.target.value });
+		this.setState({ condition: e.target.value });
 	}
 
 	addConditionImmunity = () => {
@@ -174,7 +210,7 @@ class App extends Component {
 	}
 
 	addSkill = () => {
-		let skillTemp = {...this.state.skills};
+		let skillTemp = { ...this.state.skills };
 
 		skillTemp.skillList.push({
 			stat: skillTemp.stat,
@@ -187,8 +223,8 @@ class App extends Component {
 	}
 
 	changeSkill = () => {
-		let skillTemp = {...this.state.skills}
-		
+		let skillTemp = { ...this.state.skills }
+
 		let skillStrSplit = document.getElementById("skill-select").value.split(" ");
 
 		let stat = skillStrSplit[1].replace(/[()]/g, '').toLowerCase();
@@ -209,9 +245,9 @@ class App extends Component {
 
 	changeLanguage = (e) => {
 		if (this.equals(e.target.id, "language-select")) {
-			this.setState( {language: e.target.value });
+			this.setState({ language: e.target.value });
 		} else if (this.equals(this.state.language, "Custom Type")) {
-			this.setState( {customLanguage: e.target.value });
+			this.setState({ customLanguage: e.target.value });
 		}
 	}
 
@@ -226,7 +262,7 @@ class App extends Component {
 	}
 
 	addSense = () => {
-		let senseTemp = {...this.state.senses}
+		let senseTemp = { ...this.state.senses }
 		let type = (this.equals("Custom Type", senseTemp.senseType) ? senseTemp.customType : senseTemp.senseType);
 		let newSense = {
 			name: type,
@@ -240,18 +276,18 @@ class App extends Component {
 	}
 
 	changeSenseType = (e) => {
-		let senseTemp = {...this.state.senses}
+		let senseTemp = { ...this.state.senses }
 		if (this.equals(e.target.id, "sense-select")) {
 			senseTemp.senseType = e.target.value;
 		} else if (this.equals(senseTemp.senseType, "Custom Type")) {
 			senseTemp.customType = e.target.value;
 		}
 		this.setState({ senses: senseTemp });
-		
+
 	}
 
 	changeBlindBeyond = () => {
-		let senseTemp = {...this.state.senses}
+		let senseTemp = { ...this.state.senses }
 		senseTemp.blindBeyond = !senseTemp.blindBeyond;
 
 		this.setState({ senses: senseTemp });
@@ -261,7 +297,7 @@ class App extends Component {
 		if (e.target.value < 0) {
 			return;
 		}
-		let senseTemp = {...this.state.senses}
+		let senseTemp = { ...this.state.senses }
 		senseTemp.senseDistance = e.target.value;
 		this.setState({ senses: senseTemp });
 	}
@@ -270,7 +306,7 @@ class App extends Component {
 		if (e.target.value < 0) {
 			return;
 		}
-		let scoresTemp = {...this.state.savingThrows}
+		let scoresTemp = { ...this.state.savingThrows }
 		scoresTemp[e.target.id] = e.target.value;
 		this.setState({ savingThrows: scoresTemp });
 	}
@@ -279,7 +315,7 @@ class App extends Component {
 		if (e.target.value < 0) {
 			return;
 		}
-		let scoresTemp = {...this.state.abilityScores}
+		let scoresTemp = { ...this.state.abilityScores }
 		scoresTemp[e.target.id] = e.target.value;
 		this.setState({ abilityScores: scoresTemp });
 	}
@@ -288,7 +324,7 @@ class App extends Component {
 		if (e.target.value < 0) {
 			return;
 		}
-		let speedsTemp = {...this.state.speeds}
+		let speedsTemp = { ...this.state.speeds }
 		if ("hover".localeCompare(e.target.id) === 0) {
 			speedsTemp.hover = !speedsTemp.hover;
 		} else {
@@ -311,9 +347,9 @@ class App extends Component {
 
 	changeType = (e) => {
 		if (this.equals(e.target.id, "monster-type")) {
-			this.setState( {type: e.target.value });
+			this.setState({ type: e.target.value });
 		} else if (this.equals(this.state.type, "Custom Type")) {
-			this.setState( {customType: e.target.value });
+			this.setState({ customType: e.target.value });
 		}
 	}
 
@@ -325,54 +361,58 @@ class App extends Component {
 		if (e.target.value < 0) {
 			return;
 		}
-		this.setState({AC: e.target.value});
+		this.setState({ AC: e.target.value });
 	}
 
 	changeACDescription = (e) => {
 		if (e.target.value < 0) {
 			return;
 		}
-		this.setState({AC: e.target.value});
+		this.setState({ AC: e.target.value });
 	}
 
 	changeHPDice = (e) => {
 		if (e.target.value < 0) {
 			return;
 		}
-		this.setState({HPDice: e.target.value});
+		this.setState({ HPDice: e.target.value });
 	}
 
 	changeHPDiceType = (e) => {
-		this.setState({HPDiceType: e.target.value}); 
+		this.setState({ HPDiceType: e.target.value });
 	}
-  
+
 	formatHP(dice, diceType, con, hp) {
-		return hp + 
-				" (" + 
-				dice + 
-				"d" + 
-				diceType + 
-				" + " + 
-				(Math.max(0, this.calculateMod(con)) * (dice)) + 
-				")";
+		return hp +
+			" (" +
+			dice +
+			"d" +
+			diceType +
+			" + " +
+			(Math.max(0, this.calculateMod(con)) * (dice)) +
+			")";
 	}
 
 	generateHP = () => {
-		this.setState({HPFormat: this.formatHP(this.state.HPDice, 
-			this.state.HPDiceType, 
-			this.state.abilityScores.con, 
-			this.calculate(this.state.HPDice,
-							this.state.HPDiceType,
-							this.state.abilityScores.con))});
+		this.setState({
+			HPFormat: this.formatHP(this.state.HPDice,
+				this.state.HPDiceType,
+				this.state.abilityScores.con,
+				this.calculate(this.state.HPDice,
+					this.state.HPDiceType,
+					this.state.abilityScores.con))
+		});
 	}
 
 	rollHP = () => {
-		this.setState({HPFormat: this.formatHP(this.state.HPDice, 
-			this.state.HPDiceType, 
-			this.state.abilityScores.con, 
-			this.roll(this.state.HPDice,
-							this.state.HPDiceType,
-							this.state.abilityScores.con))});
+		this.setState({
+			HPFormat: this.formatHP(this.state.HPDice,
+				this.state.HPDiceType,
+				this.state.abilityScores.con,
+				this.roll(this.state.HPDice,
+					this.state.HPDiceType,
+					this.state.abilityScores.con))
+		});
 	}
 
 	roll(dice, diceType, con) {
@@ -393,7 +433,7 @@ class App extends Component {
 		return Math.floor((score - 10) / 2);
 	}
 
-	getRandomInt(min, max) { 
+	getRandomInt(min, max) {
 		min = Math.ceil(min);
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min;

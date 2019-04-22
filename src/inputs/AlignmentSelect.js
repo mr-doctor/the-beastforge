@@ -24,6 +24,7 @@ class AlignmentSelect extends Component {
 							<option>Chaotic Evil</option>
 						</Form.Control>
 					</Col>
+					<Col/>
 				</Form.Row>
 			</Form.Group>
 		);
