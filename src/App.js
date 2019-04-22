@@ -6,6 +6,15 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import CustomType from './inputs/CustomType'
+import GenderSelect from './inputs/GenderSelect';
+import SizeSelect from './inputs/SizeSelect';
+import TypeSelect from './inputs/TypeSelect';
+import AlignmentSelect from './inputs/AlignmentSelect';
+import ChangeAC from './inputs/ChangeAC';
+import ManageHP from './inputs/ManageHP';
+import Speeds from './inputs/Speeds';
+import AbilityScores from './inputs/AbilityScores';
+import SavingThrows from './inputs/SavingThrows';
 
 class App extends Component {
 
@@ -13,11 +22,13 @@ class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			alignment: "",
 			gender: "",
 			size: "",
 			type: "",
 			customType: "",
 			AC: "0",
+			ACDescription: "",
 			HPDice: 0,
 			HPDiceType: 4,
 			HP: 0,
@@ -69,6 +80,7 @@ class App extends Component {
 				modifier: "",
 			},
 			conditionImmunities: [],
+			condition: "",
 		};
 	}
 
@@ -76,300 +88,38 @@ class App extends Component {
 		return ( 
 			<div className="App">
 
-				<Form>
 					<Form.Control type="text" placeholder="Monster Name" />
 
-					<Form.Group controlId="monster-gender">
-						<Form.Row>
-							<Col>
-								<Form.Label>Gender</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control as="select">
-									<option>Male</option>
-									<option>Female</option>
-									<option>Neutral</option>
-								</Form.Control>
-							</Col>
-						</Form.Row>
-					</Form.Group>
+					<GenderSelect id="gender-select" onChange={this.changeGender}/>
 
-					<Form.Group controlId="monster-size">
-						<Form.Row>
-							<Col>
-								<Form.Label>Size</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control as="select">
-									<option>Tiny</option>
-									<option>Small</option>
-									<option>Medium</option>
-									<option>Large</option>
-									<option>Huge</option>
-									<option>Gargantuan</option>
-								</Form.Control>
-							</Col>
-						</Form.Row>
-					</Form.Group>
+					<SizeSelect id="size-select" onChange={this.changeSize}/>
 
-					<Form.Group>
-						<Form.Row>
-							<Col>
-								<Form.Control id="monster-type" as="select" onChange={this.changeType}>
-									<option>Aberration</option>
-									<option>Beast</option>
-									<option>Celestial</option>
-									<option>Construct</option>
-									<option>Dragon</option>
-									<option>Elemental</option>
-									<option>Fey</option>
-									<option>Fiend</option>
-									<option>Giant</option>
-									<option>Humanoid</option>
-									<option>Monstrosity</option>
-									<option>Ooze</option>
-									<option>Plant</option>
-									<option>Undead</option>
-									<option>Custom Type</option>
-								</Form.Control>
-							</Col>
-							<Col>
-								<CustomType display={"Custom Type".localeCompare(this.props.monsterType) === 0} onChange={this.changeType}/>
-							</Col>
-						</Form.Row>
-					</Form.Group>
+					<TypeSelect id="type-select" displayCustom={this.equals("Custom Type", this.state.type)} onChange={this.changeType}/>
 
-					<Form.Group>
-						<Form.Row>
-							<Col>
-								<Form.Label>Alignment</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control as="select">
-									<option>Unaligned</option>
-									<option>Lawful Good</option>
-									<option>Lawful Neutral</option>
-									<option>Lawful Evil</option>
-									<option>Neutral Good</option>
-									<option>True Neutral</option>
-									<option>Neutral Evil</option>
-									<option>Chaotic Good</option>
-									<option>Chaotic Neutral</option>
-									<option>Chaotic Evil</option>
-								</Form.Control>
-							</Col>
-						</Form.Row>
-					</Form.Group>
+					<AlignmentSelect id="alignment-select" onChange={this.changeAlignment}/>
 
-					<Form.Group>
-						<Form.Row>
-							<Col>
-								<Form.Label>Armour Class</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control id="AC-input" type="number" step={1} value={this.state.AC} onChange={this.changeAC}/>
-							</Col>
-							<Col>
-								<Form.Control type="text" placeholder="Armour Type" />
-							</Col>
-						</Form.Row>
-					</Form.Group>
-
-					<Form.Group>
-						<Form.Row>
-							<Col>
-								<Form.Label>Hit Points</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control id="HP-dice-input" type="number" step={1} value={this.state.HPDice} onChange={this.changeHPDice}/>
-							</Col>
-							<Col>
-								<Form.Control id="hp-type" as="select" onChange={this.changeHPDiceType}>
-									<option value={4}>d4</option>
-									<option value={6}>d6</option>
-									<option value={8}>d8</option>
-									<option value={10}>d10</option>
-									<option value={12}>d12</option>
-									<option value={20}>d20</option>
-								</Form.Control>
-							</Col>
-							<Col>
-								<Form.Control plaintext value={this.state.HPFormat} readOnly/>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-
-					<Form.Group>
-						<Form.Row>
-							<Col>
-								<Button onClick={this.generateHP}>Generate HP Average</Button>
-							</Col>
-							<Col>
-								<Button onClick={this.rollHP}>Roll HP</Button>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
+					<ChangeAC id="changeAC" value={this.state.AC} onChange={this.changeAC}/>
+					
+					<ManageHP
+						HPDice={this.HPDice}
+						changeHPDice={this.changeHPDice} 
+						changeHPDiceType={this.changeHPDiceType} 
+						HPFormat={this.state.HPFormat}
+						generateHP={this.generateHP}
+						rollHP={this.rollHP}
+					/>
 
 				<h2>Speeds</h2>
 
-				<Form>
-					<Form.Group>
-						<Form.Row>
-							<Col>
-								<Form.Label>Walk</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control id="walk" type="number" step={1} value={this.state.speeds.walk} onChange={this.changeSpeed}/>
-							</Col>
-							<Col>
-								<Form.Label>Burrow</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control id="burrow" type="number" step={1} value={this.state.speeds.burrow} onChange={this.changeSpeed}/>
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Label>Swim</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control id="swim" type="number" step={1} value={this.state.speeds.swim} onChange={this.changeSpeed}/>
-							</Col>
-							<Col>
-								<Form.Label>Climb</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control id="climb" type="number" step={1} value={this.state.speeds.climb} onChange={this.changeSpeed}/>
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Label>Fly</Form.Label>
-							</Col>
-							<Col>
-								<Form.Control id="fly" type="number" step={1} value={this.state.speeds.fly} onChange={this.changeSpeed}/>
-							</Col>
-							<Col>
-								<Form.Check type="checkbox" label="Hover" id="hover" onChange={this.changeSpeed}/>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
+				<Speeds speeds={this.state.speeds} onChange={this.changeSpeed}/>
 
 				<h2>Ability Scores</h2>
 
-				<Form>
-					<Form.Group>
-					<Form.Row>
-							<Col>
-								<Form.Label>STR</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>DEX</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>CON</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>INT</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>WIS</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>CHA</Form.Label>
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Control id="str" type="number" step={1} value={this.state.abilityScores.str} onChange={this.changeAS} />
-							</Col>
-							<Col>
-								<Form.Control id="dex" type="number" step={1} value={this.state.abilityScores.dex} onChange={this.changeAS} />
-							</Col>
-							<Col>
-								<Form.Control id="con" type="number" step={1} value={this.state.abilityScores.con} onChange={this.changeAS} />
-							</Col>
-							<Col>
-								<Form.Control id="int" type="number" step={1} value={this.state.abilityScores.int} onChange={this.changeAS} />
-							</Col>
-							<Col>
-								<Form.Control id="wis" type="number" step={1} value={this.state.abilityScores.wis} onChange={this.changeAS} />
-							</Col>
-							<Col>
-								<Form.Control id="cha" type="number" step={1} value={this.state.abilityScores.cha} onChange={this.changeAS} />
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.str)} readOnly/>
-							</Col>
-							<Col>
-								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.dex)} readOnly/>
-							</Col>
-							<Col>
-								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.con)} readOnly/>
-							</Col>
-							<Col>
-								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.int)} readOnly/>
-							</Col>
-							<Col>
-								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.wis)} readOnly/>
-							</Col>
-							<Col>
-								<Form.Control plaintext value={this.formatMod(this.state.abilityScores.cha)} readOnly/>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
+				<AbilityScores abilityScores={this.state.abilityScores} formatMod={this.formatMod} onChange={this.changeAS}/>
 
 				<h2>Saving Throws</h2>
 
-				<Form>
-					<Form.Group>
-					<Form.Row>
-							<Col>
-								<Form.Label>STR</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>DEX</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>CON</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>INT</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>WIS</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>CHA</Form.Label>
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Control id="str" type="number" step={1} value={this.state.savingThrows.str} onChange={this.changeSv} />
-							</Col>
-							<Col>
-								<Form.Control id="dex" type="number" step={1} value={this.state.savingThrows.dex} onChange={this.changeSv} />
-							</Col>
-							<Col>
-								<Form.Control id="con" type="number" step={1} value={this.state.savingThrows.con} onChange={this.changeSv} />
-							</Col>
-							<Col>
-								<Form.Control id="int" type="number" step={1} value={this.state.savingThrows.int} onChange={this.changeSv} />
-							</Col>
-							<Col>
-								<Form.Control id="wis" type="number" step={1} value={this.state.savingThrows.wis} onChange={this.changeSv} />
-							</Col>
-							<Col>
-								<Form.Control id="cha" type="number" step={1} value={this.state.savingThrows.cha} onChange={this.changeSv} />
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
+				<SavingThrows savingThrows={this.state.savingThrows} onChange={this.changeSv}/>
 
 				<h2>Senses</h2>
 
@@ -579,6 +329,16 @@ class App extends Component {
 		console.log(this.state);
 	}
 
+	changeConditionImmunity = (e) => {
+		this.setState( { condition: e.target.value });
+	}
+
+	addConditionImmunity = () => {
+		let tempConditions = [...this.state.conditionImmunities];
+
+		tempConditions.push()
+	}
+
 	addSkill = () => {
 		let skillTemp = {...this.state.skills};
 
@@ -665,6 +425,15 @@ class App extends Component {
 		this.setState({ senses: senseTemp });
 	}
 
+	changeSv = (e) => {
+		if (e.target.value < 0) {
+			return;
+		}
+		let scoresTemp = {...this.state.savingThrows}
+		scoresTemp[e.target.id] = e.target.value;
+		this.setState({ savingThrows: scoresTemp });
+	}
+
 	changeAS = (e) => {
 		if (e.target.value < 0) {
 			return;
@@ -695,6 +464,10 @@ class App extends Component {
 		this.setState({ size: e });
 	};
 
+	changeAlignment = (e) => {
+		this.setState({ alignment: e });
+	};
+
 	changeType = (e) => {
 		if (this.equals(e.target.id, "monster-type")) {
 			this.setState( {type: e.target.value });
@@ -708,6 +481,13 @@ class App extends Component {
 	}
 
 	changeAC = (e) => {
+		if (e.target.value < 0) {
+			return;
+		}
+		this.setState({AC: e.target.value});
+	}
+
+	changeACDescription = (e) => {
 		if (e.target.value < 0) {
 			return;
 		}
@@ -764,7 +544,7 @@ class App extends Component {
 	}
 
 	formatMod(score) {
-		let mod = this.calculateMod(score);
+		let mod = Math.floor((score - 10) / 2);
 		return ((mod > 0) ? "+" : "") + mod;
 	}
 
