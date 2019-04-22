@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import CustomType from './inputs/CustomType'
@@ -15,6 +13,9 @@ import ManageHP from './inputs/ManageHP';
 import Speeds from './inputs/Speeds';
 import AbilityScores from './inputs/AbilityScores';
 import SavingThrows from './inputs/SavingThrows';
+import Senses from './inputs/Senses';
+import LanguageSelect from './inputs/LanguageSelect';
+import Skills from './inputs/Skills';
 
 class App extends Component {
 
@@ -42,12 +43,12 @@ class App extends Component {
 				cha: 10,
 			},
 			savingThrows: {
-				strSv: 0,
-				dexSv: 0,
-				conSv: 0,
-				intSv: 0,
-				wisSv: 0,
-				chaSv: 0,
+				str: 0,
+				dex: 0,
+				con: 0,
+				int: 0,
+				wis: 0,
+				cha: 0,
 			},
 			speeds: {
 				walk: 30,
@@ -123,202 +124,27 @@ class App extends Component {
 
 				<h2>Senses</h2>
 
-				<Form>
-					<Form.Group>
-					<Form.Row>
-							<Col>
-								<Form.Label>Sense</Form.Label>
-							</Col>
-							<Col>
-								<Form.Label>Distance</Form.Label>
-							</Col>
-							<Col>
-								<Form.Check type="checkbox" label="Blind Beyond" id="hover" onChange={this.changeSpeed}/>
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Control id="sense-select" as="select" onChange={this.changeSenseType}>
-									<option>Darkvision</option>
-									<option>Blindsight</option>
-									<option>Tremorsense</option>
-									<option>Truesight</option>
-									<option>Custom Type</option>
-								</Form.Control>
-								<CustomType display={"Custom Type".localeCompare(this.state.senses.senseType) === 0} onChange={this.changeSenseType}/>
-							</Col>
-							<Col>
-								<Form.Control id="senseDistance" type="number" step={1} value={this.state.senses.senseDistance} onChange={this.changeSenseDistance} />
-							</Col>
-							<Col>
-								<Button onClick={this.addSense}>Add</Button>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
+				<Senses senses={this.state.senses}
+						changeBlindBeyond={this.changeBlindBeyond}
+						changeSenseType={this.changeSenseType}
+						displayCustom={this.equals("Custom Type", this.state.senses.senseType)}
+						changeSenseDistance={this.changeSenseDistance}
+						addSense={this.addSense}
+				/>
 
 				<h2>Languages</h2>
 
-				<Form>
-					<Form.Group>
-					<Form.Row>
-							<Col>
-								<Form.Label>Language</Form.Label>
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Control id="language-select" as="select" onChange={this.changeLanguage}>
-									<option>Abyssal</option>
-									<option>Aquan</option>
-									<option>Celestial</option>
-									<option>Common</option>
-									<option>Deep Speech</option>
-									<option>Draconic</option>
-									<option>Druidic</option>
-									<option>Dwarvish</option>
-									<option>Elvish</option>
-									<option>Giant</option>
-									<option>Gnomish</option>
-									<option>Goblin</option>
-									<option>Gnoll</option>
-									<option>Infernal</option>
-									<option>Orc</option>
-									<option>Primordial</option>
-									<option>Sylvan</option>
-									<option>Undercommon</option>
-									<option>Custom Type</option>
-								</Form.Control>
-								<CustomType display={"Custom Type".localeCompare(this.state.language) === 0} onChange={this.changeLanguage}/>
-							</Col>
-							<Col>
-								<Button onClick={this.addLanguage}>Add</Button>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
+				<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
+								onChange={this.changeLanguage}
+								addLanguage={this.addLanguage}
+				/>
 
 				<h2>Skills</h2>
 
-				<Form>
-					<Form.Group>
-						<Form.Row>
-							<Col>
-								<Form.Label>Skill</Form.Label>
-							</Col>
-							<Col>
-								<br></br>
-							</Col>
-							<Col>
-								<Form.Label>Bonus</Form.Label>
-							</Col>
-							<Col>
-								<br></br>
-							</Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Control id="skill-select" as="select" onChange={this.changeSkill}>
-									<option>Athletics (Str)</option>
-									<option>Acrobatics (Dex)</option>
-									<option>Sleight of Hand (Dex)</option>
-									<option>Stealth (Dex)</option>
-									<option>Arcana (Int)</option>
-									<option>History (Int)</option>
-									<option>Investigation (Int)</option>
-									<option>Religion (Int)</option>
-									<option>Animal Handling (Wis)</option>
-									<option>Insight (Wis)</option>
-									<option>Medicine (Wis)</option>
-									<option>Perception (Wis)</option>
-									<option>Survival (Wis)</option>
-									<option>Deception (Cha)</option>
-									<option>Intimidation (Cha)</option>
-									<option>Performance (Cha)</option>
-									<option>Persuasion (Cha)</option>
-								</Form.Control>
-							</Col>
-							<Col>
-								<Form.Check type="checkbox" label="Proficient" id="proficient" onChange={this.changeSkill}/>
-							</Col>
-							<Col>
-								<Form.Control id="skill-bonus" type="number" step={1} value={this.state.skills.bonus} onChange={this.changeSkill} />
-							</Col>
-							<Col>
-								<Button onClick={this.addSkill}>Add</Button>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
-
-				<Form>
-					<Form.Group>
-						<Form.Row>
-							<Col><br></br></Col>
-							<Col>
-								<h5>Condition Immunities</h5>
-							</Col>
-							<Col><br></br></Col>
-							<Col><br></br></Col>
-							<Col>
-								<h5>Damage Modifiers</h5>
-							</Col>
-							<Col><br></br></Col>
-						</Form.Row>
-						<Form.Row>
-							<Col>
-								<Form.Control id="condition-select" as="select" onChange={this.changeConditionImmunity}>
-									<option>Blinded</option>
-									<option>Charmed</option>
-									<option>Deafened</option>
-									<option>Encumbered</option>
-									<option>Exhaustion</option>
-									<option>Frightened</option>
-									<option>Grappled</option>
-									<option>Incorporeal</option>
-									<option>Intoxicated</option>
-									<option>Invisible</option>
-									<option>Paralysed</option>
-									<option>Petrified</option>
-									<option>Petrified</option>
-									<option>Poisoned</option>
-									<option>Restrained</option>
-									<option>Stunned</option>
-									<option>Unconscious</option>
-								</Form.Control>
-							</Col>
-							<Col>
-								<Button onClick={this.addConditionImmunity}>Add</Button>
-							</Col>
-							<Col>
-								<Form.Control id="damage-select" as="select" onChange={this.changeDamageType}>
-									<option>Bludgeoning</option>
-									<option>Fire</option>
-									<option>Force</option>
-									<option>Lightning</option>
-									<option>Necrotic</option>
-									<option>Piercing</option>
-									<option>Poison</option>
-									<option>Psychic</option>
-									<option>Radiant</option>
-									<option>Slashing</option>
-									<option>Thunder</option>
-									<option>Physical nonmagical</option>
-								</Form.Control>
-							</Col>
-							<Col>
-								<Form.Control id="modifier-select" as="select" onChange={this.changeDamageModifier}>
-									<option>Resistance</option>
-									<option>Immunity</option>
-									<option>Vulnerability</option>
-								</Form.Control>
-							</Col>
-							<Col>
-								<Button onClick={this.addDamageModifier}>Add</Button>
-							</Col>
-						</Form.Row>
-					</Form.Group>
-				</Form>
+				<Skills skills={this.state.skills}
+						onChange={this.changeSkill}
+						addSkill={this.addSkill}
+						/>
 
 				<Button onClick={this.debugButton}>Debug</Button>
 			</div>
@@ -414,6 +240,13 @@ class App extends Component {
 		}
 		this.setState({ senses: senseTemp });
 		
+	}
+
+	changeBlindBeyond = () => {
+		let senseTemp = {...this.state.senses}
+		senseTemp.blindBeyond = !senseTemp.blindBeyond;
+
+		this.setState({ senses: senseTemp });
 	}
 
 	changeSenseDistance = (e) => {
