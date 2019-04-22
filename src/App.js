@@ -16,6 +16,7 @@ import SavingThrows from './inputs/SavingThrows';
 import Senses from './inputs/Senses';
 import LanguageSelect from './inputs/LanguageSelect';
 import Skills from './inputs/Skills';
+import ConditionMod from './inputs/ConditionMod';
 
 class App extends Component {
 
@@ -108,7 +109,7 @@ class App extends Component {
 						HPFormat={this.state.HPFormat}
 						generateHP={this.generateHP}
 						rollHP={this.rollHP}
-					/>
+						/>
 
 				<h2>Speeds</h2>
 
@@ -130,14 +131,14 @@ class App extends Component {
 						displayCustom={this.equals("Custom Type", this.state.senses.senseType)}
 						changeSenseDistance={this.changeSenseDistance}
 						addSense={this.addSense}
-				/>
+						/>
 
 				<h2>Languages</h2>
 
 				<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
 								onChange={this.changeLanguage}
 								addLanguage={this.addLanguage}
-				/>
+								/>
 
 				<h2>Skills</h2>
 
@@ -145,6 +146,13 @@ class App extends Component {
 						onChange={this.changeSkill}
 						addSkill={this.addSkill}
 						/>
+
+				<ConditionMod changeConditionImmunity={this.changeConditionImmunity}
+								changeDamageType={this.changeDamageType}
+								changeDamageModifier={this.changeDamageModifier}
+								addConditionImmunity={this.addConditionImmunity}
+								addDamageModifier={this.addDamageModifier}
+								/>
 
 				<Button onClick={this.debugButton}>Debug</Button>
 			</div>
