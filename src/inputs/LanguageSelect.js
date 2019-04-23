@@ -32,12 +32,16 @@ class LanguageSelect extends Component {
 								<option>Undercommon</option>
 								<option>Custom Type</option>
 							</Form.Control>
-							<CustomType display={this.props.customDisplay} onChange={this.props.onChange} />
+						</Col>
+						<Col>
+							<CustomType display={this.props.displayCustom} onChange={this.props.onChange} />
 						</Col>
 					</Form.Row>
-					<Col>
-						<Button onClick={this.props.addLanguage}>Add</Button>
-					</Col>
+					<Form.Row ys={5}>
+						<Col>
+							<Button onClick={this.props.addLanguage}>Add</Button>
+						</Col>
+					</Form.Row>
 				</Form.Group>
 			</Form>
 		);

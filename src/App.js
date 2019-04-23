@@ -21,6 +21,7 @@ import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ItemList from './inputs/ItemList';
+import ItemDisplay from './display/ItemDisplay';
 
 class App extends Component {
 
@@ -85,11 +86,15 @@ class App extends Component {
 			damageMods: {
 				damageMods: [],
 				damageType: "Bludgeoning",
-				modifier: "Resistance",
+				mod: "Resistance",
 			},
 			conditionImmunities: [],
 			condition: "Blinded",
-			selectedItem: "Foo",
+			selectedItem: {
+				name: " ",
+				displayName: " ",
+				type: "",
+			},
 			items: [],
 		};
 	}
@@ -126,7 +131,7 @@ class App extends Component {
 								<Speeds speeds={this.state.speeds} onChange={this.changeSpeed} />
 							</Card>
 							<Card className="col-md-5">
-								<ItemList list={this.state.items} />
+								<ItemList list={this.state.items} select={this.select}/>
 							</Card>
 						</CardGroup>
 						<CardGroup>
@@ -184,7 +189,7 @@ class App extends Component {
 								/>
 						</Card>
 						<ConditionMod changeConditionImmunity={this.changeConditionImmunity}
-							changeDamageType={this.changeDamageType}
+							changeDamageModType={this.changeDamageModType}
 							changeDamageModifier={this.changeDamageModifier}
 							addConditionImmunity={this.addConditionImmunity}
 							addDamageModifier={this.addDamageModifier}
@@ -193,18 +198,13 @@ class App extends Component {
 						<Button onClick={this.debugButton}>Debug</Button>
 						</Card>
 						<Card className="col-md-5">
-						<Card className="h-25">
-							<Card.Header>{this.state.selectedItem}</Card.Header>
-							<Card.Body>
 
-							</Card.Body>
-						</Card>
-						<br/>
+						<ItemDisplay item={this.state.selectedItem} delete={this.delete}/>
+						
 						<Card className="h-100">
 							
 							
 						</Card>
-						<br/>
 
 						</Card>
 				</CardGroup>
@@ -214,6 +214,28 @@ class App extends Component {
 
 	debugButton = () => {
 		console.log(this.state);
+	}
+
+	delete = (item) => {
+		console.log("deleting ", item);
+
+		let itemsTemp = [...this.state.items];
+
+		itemsTemp.splice(itemsTemp.indexOf(item), 1);
+		
+		this.setState({
+			items: itemsTemp,
+			selectedItem: {
+				name: " ",
+				displayName: " ",
+				type: "",
+			}
+		});
+	}
+
+	select = (item) => {
+		console.log(item)
+		this.setState({ selectedItem: item });
 	}
 
 	addItem(item) {
@@ -236,6 +258,22 @@ class App extends Component {
 		this.setState({ monsterName: e.target.value })
 	}
 
+	changeDamageModifier = (e) => {
+		let tempMods = {...this.state.damageMods};
+
+		tempMods.mod = e.target.value;
+
+		this.setState({ damageMods: tempMods });
+	}
+
+	changeDamageModType = (e) => {
+		let tempMods = {...this.state.damageMods};
+
+		tempMods.damageType = e.target.value;
+
+		this.setState({ damageMods: tempMods });
+	}
+
 	changeConditionImmunity = (e) => {
 		this.setState({ condition: e.target.value });
 	}
@@ -243,7 +281,32 @@ class App extends Component {
 	addConditionImmunity = () => {
 		let tempConditions = [...this.state.conditionImmunities];
 
-		tempConditions.push()
+		tempConditions.push(this.state.condition);
+		this.setState({ conditionImmunities: tempConditions });
+
+		this.addItem({
+			name: this.state.condition,
+			displayName: this.state.condition,
+			type: "immunity",
+		});
+	}
+
+	addDamageModifier = () => {
+		let tempMods = {...this.state.damageMods};
+
+		let newMod = {
+			damageType: this.state.damageMods.damageType,
+			mod: this.state.damageMods.mod,
+		};
+
+		tempMods.damageMods.push(newMod);
+		this.setState({ damageMods: tempMods });
+
+		this.addItem({
+			name: newMod.damageType,
+			displayName: newMod.damageType,
+			type: newMod.mod.toLowerCase(),
+		});
 	}
 
 	addSkill = () => {
