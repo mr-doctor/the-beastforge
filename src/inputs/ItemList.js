@@ -8,8 +8,10 @@ class ItemList extends Component {
 		return (
 			<ListGroup>
 				{this.props.list.map(function(item) {
-					return <ListGroup.Item action>
-						{item.name}
+					let capitalisedType = item.type.charAt(0).toUpperCase() + item.type.slice(1);
+					return <ListGroup.Item action key={item.name}>
+						<b>{capitalisedType}</b>
+						{" | " + item.displayName}
 					</ListGroup.Item>
 				})
 				}

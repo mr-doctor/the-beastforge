@@ -73,22 +73,22 @@ class App extends Component {
 				blindBeyond: false,
 			},
 			languages: [],
-			language: "",
+			language: "Abyssal",
 			customLanguage: "",
 			skills: {
 				skillList: [],
-				skill: "",
+				skill: "Athletics",
 				proficient: false,
 				bonus: 0,
-				stat: "",
+				stat: "str",
 			},
 			damageMods: {
 				damageMods: [],
-				damageType: "",
-				modifier: "",
+				damageType: "Bludgeoning",
+				modifier: "Resistance",
 			},
 			conditionImmunities: [],
-			condition: "",
+			condition: "Blinded",
 			selectedItem: "Foo",
 			items: [],
 		};
@@ -155,29 +155,34 @@ class App extends Component {
 								</div>
 							</Card>
 						</CardGroup>
-						<h5>Senses</h5>
-						<Senses senses={this.state.senses}
-							changeBlindBeyond={this.changeBlindBeyond}
-							changeSenseType={this.changeSenseType}
-							displayCustom=	{this.equals("Custom Type", this.state.senses.senseType)}
-							changeSenseDistance={this.changeSenseDistance}
-							addSense={this.addSense}
-							/>
+						<CardGroup>
+							<Card>
+								<h5>Senses</h5>
+								<Senses senses={this.state.senses}
+									changeBlindBeyond={this.changeBlindBeyond}
+									changeSenseType={this.changeSenseType}
+									displayCustom=	{this.equals("Custom Type", this.state.senses.senseType)}
+									changeSenseDistance={this.changeSenseDistance}
+									addSense={this.addSense}
+									/>
+							</Card>
+							<Card>
+								<h5>Languages</h5>
 
-						<h5>Languages</h5>
-
-						<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
-							onChange={this.changeLanguage}
-							addLanguage={this.addLanguage}
-							/>
-
-						<h5>Skills</h5>
-
-						<Skills skills={this.state.skills}
-							onChange={this.changeSkill}
-							addSkill={this.addSkill}
-							/>
-
+								<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
+									onChange={this.changeLanguage}
+									addLanguage={this.addLanguage}
+									/>
+							</Card>
+						</CardGroup>
+						
+						<Card>
+							<h5>Skills</h5>
+							<Skills skills={this.state.skills}
+								onChange={this.changeSkill}
+								addSkill={this.addSkill}
+								/>
+						</Card>
 						<ConditionMod changeConditionImmunity={this.changeConditionImmunity}
 							changeDamageType={this.changeDamageType}
 							changeDamageModifier={this.changeDamageModifier}
@@ -186,7 +191,6 @@ class App extends Component {
 							/>
 
 						<Button onClick={this.debugButton}>Debug</Button>
-						<Button onClick={this.addStuff}>AddStuff</Button>
 						</Card>
 						<Card className="col-md-5">
 						<Card className="h-25">
@@ -208,22 +212,24 @@ class App extends Component {
 		);
 	}
 
-	addStuff = () => {
-		let items2 = [];
-		items2.push({
-			name: "foobar",
-		});
-		this.setState({ items: items2 })
-	}
-
 	debugButton = () => {
 		console.log(this.state);
 	}
 
 	addItem(item) {
-		let items2 = [];
-		items2.push(item);
-		this.setState({ items: items2 })
+		var items2 = [...this.state.items];
+		var replace = false;
+		for (let i = 0; i < items2.length; i++) {
+			if (this.equals(items2[i].name, item.name)) {
+				items2[i] = item;
+				replace = true;
+				break;
+			}
+		}
+		if (!replace) {
+			items2.push(item);
+		}
+		this.setState({ items: items2 });
 	}
 
 	changeName = (e) => {
@@ -252,16 +258,15 @@ class App extends Component {
 
 		this.setState({ skills: skillTemp });
 		this.addItem({
-			name: this.formatSkill(newSkill),
+			displayName: this.formatSkill(newSkill),
+			type: "skill",
+			name: newSkill.skill,
 		});
 	}
 
 	formatSkill(skill) {
 		let bonus = this.calculateMod(this.state.abilityScores[skill.stat]) + skill.bonus + ((skill.proficient) ? this.state.proficiency : 0);
-		console.log(this.calculateMod(this.state.abilityScores[skill.stat]));
-		console.log(skill.bonus);
-		console.log(((skill.proficient) ? this.state.proficiency : 0));
-		return skill.skill + " " + ((bonus > 0) ? "+" : "") + bonus;
+		return skill.skill + " " + ((bonus >= 0) ? "+" : "") + bonus;
 	}
 
 	changeSkill = () => {
@@ -301,6 +306,11 @@ class App extends Component {
 		langTemp.push(lang);
 
 		this.setState({ languages: langTemp });
+		this.addItem({
+			name: lang,
+			displayName: lang,
+			type: "language",
+		});
 	}
 
 	addSense = () => {
@@ -315,6 +325,11 @@ class App extends Component {
 		senseTemp.senseList.push(newSense);
 
 		this.setState({ senses: senseTemp })
+		this.addItem({
+			name: newSense.name,
+			displayName: (newSense.name + " " + newSense.distance + "ft" + ((newSense.blindBeyond) ? " (Blind beyond)" : "")),
+			type: "sense",
+		});
 	}
 
 	changeSenseType = (e) => {

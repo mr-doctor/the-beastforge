@@ -10,10 +10,10 @@ class Senses extends Component {
 			<Form>
 				<Form.Group>
 					<Form.Row>
-						<Col>
+						<Col xs={4}>
 							<Form.Label>Sense</Form.Label>
 						</Col>
-						<Col>
+						<Col xs={4}>
 							<Form.Label>Distance</Form.Label>
 						</Col>
 						<Col>
@@ -21,7 +21,7 @@ class Senses extends Component {
 						</Col>
 					</Form.Row>
 					<Form.Row>
-						<Col>
+						<Col xs={5}>
 							<Form.Control id="sense-select" as="select" onChange={this.props.changeSenseType}>
 								<option>Darkvision</option>
 								<option>Blindsight</option>
@@ -31,8 +31,8 @@ class Senses extends Component {
 							</Form.Control>
 							<CustomType display={this.props.displayCustom} onChange={this.props.changeSenseType} />
 						</Col>
-						<Col>
-							<Form.Control id="senseDistance" type="number" step={1} value={this.props.senses.senseDistance} onChange={this.props.changeSenseDistance} />
+						<Col xs={5}>
+							<Form.Control id="senseDistance" type="number" step={5} value={this.props.senses.senseDistance} onChange={this.props.changeSenseDistance} />
 						</Col>
 						<Col>
 							<Button onClick={this.props.addSense}>Add</Button>

@@ -11,11 +11,6 @@ class LanguageSelect extends Component {
 				<Form.Group>
 					<Form.Row>
 						<Col>
-							<Form.Label>Language</Form.Label>
-						</Col>
-					</Form.Row>
-					<Form.Row>
-						<Col>
 							<Form.Control id="language-select" as="select" onChange={this.props.onChange}>
 								<option>Abyssal</option>
 								<option>Aquan</option>
@@ -39,10 +34,10 @@ class LanguageSelect extends Component {
 							</Form.Control>
 							<CustomType display={this.props.customDisplay} onChange={this.props.onChange} />
 						</Col>
-						<Col>
-							<Button onClick={this.props.addLanguage}>Add</Button>
-						</Col>
 					</Form.Row>
+					<Col>
+						<Button onClick={this.props.addLanguage}>Add</Button>
+					</Col>
 				</Form.Group>
 			</Form>
 		);
