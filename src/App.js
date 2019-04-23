@@ -20,6 +20,7 @@ import ConditionMod from './inputs/ConditionMod';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ItemList from './inputs/ItemList';
 
 class App extends Component {
 
@@ -39,6 +40,7 @@ class App extends Component {
 			HPDiceType: 4,
 			HP: 0,
 			HPFormat: "0",
+			proficiency: 2,
 			abilityScores: {
 				str: 10,
 				dex: 10,
@@ -87,6 +89,8 @@ class App extends Component {
 			},
 			conditionImmunities: [],
 			condition: "",
+			selectedItem: "Foo",
+			items: [],
 		};
 	}
 
@@ -94,105 +98,132 @@ class App extends Component {
 		return (
 			<div className="App">
 				<CardGroup>
-					<Card>
-								<Form.Control type="text" placeholder="Monster Name" style={{textAlign: "center"}} onChange={this.changeName}/>
-								<CardGroup>
-									<Card>
-										<GenderSelect id="gender-select" onChange={this.changeGender} />
+					<Card className="col-md-10">
+						<Form.Control type="text" placeholder="Monster Name" style={{textAlign: "center"}} onChange={this.changeName}/>
+						<CardGroup>
+							<Card className="col-md-10">
+								<GenderSelect id="gender-select" onChange={this.changeGender} />
+								
+								<SizeSelect id="size-select" onChange={this.changeSize} />
 
-										<SizeSelect id="size-select" onChange={this.changeSize} />
+								<TypeSelect id="type-select" displayCustom={this.equals("Custom Type", this.state.type)} onChange={this.changeType} />
 
-										<TypeSelect id="type-select" displayCustom={this.equals("Custom Type", this.state.type)} onChange={this.changeType} />
+								<AlignmentSelect id="alignment-select" onChange={this.changeAlignment} />
 
-										<AlignmentSelect id="alignment-select" onChange={this.changeAlignment} />
+								<ChangeAC id="changeAC" value={this.state.AC} onChange={this.changeAC} />
 
-										<ChangeAC id="changeAC" value={this.state.AC} onChange={this.changeAC} />
+								<ManageHP
+									HPDice={this.HPDice}
+									changeHPDice={this.changeHPDice}
+									changeHPDiceType={this.changeHPDiceType}
+									HPFormat={this.state.HPFormat}
+									generateHP={this.generateHP}
+									rollHP={this.rollHP}
+									/>
+								
+								<h5>Speeds</h5>
 
-										<ManageHP
-											HPDice={this.HPDice}
-											changeHPDice={this.changeHPDice}
-											changeHPDiceType={this.changeHPDiceType}
-											HPFormat={this.state.HPFormat}
-											generateHP={this.generateHP}
-											rollHP={this.rollHP}
-											/>
-									
-										<h2>Speeds</h2>
+								<Speeds speeds={this.state.speeds} onChange={this.changeSpeed} />
+							</Card>
+							<Card className="col-md-5">
+								<ItemList list={this.state.items} />
+							</Card>
+						</CardGroup>
+						<CardGroup>
+							<Card className="col-md-10">
+								<h5>Ability Scores</h5>
 
-										<Speeds speeds={this.state.speeds} onChange={this.changeSpeed} />
-									</Card>
-									<Card>
-									</Card>
-								</CardGroup>
+								<AbilityScores abilityScores={this.state.abilityScores} formatMod={this.formatMod} onChange={this.changeAS} />
 
-								<CardGroup>
-									<Card>
-										<h2>Ability Scores</h2>
+								<h5>Saving Throws</h5>
 
-										<AbilityScores abilityScores={this.state.abilityScores} formatMod={this.formatMod} onChange={this.changeAS} />
+								<SavingThrows savingThrows={this.state.savingThrows} onChange={this.changeSv} />
 
-										<h2>Saving Throws</h2>
-
-										<SavingThrows savingThrows={this.state.savingThrows} onChange={this.changeSv} />
-
-									</Card>
-									<Card>
-										<div className="container h-100">
-											<div className="row h-100 justify-content-center align-items-center">
-												<div id="col" className="col-12">
-													<ButtonGroup vertical>
-														<Button variant="outline-primary" style={{marginTop: "10px"}}>Add Ability</Button>
-														<Button variant="outline-info" style={{marginTop: "10px"}}>Add Spellcasting</Button>
-														<Button variant="outline-danger" style={{marginTop: "10px"}}>Add Action</Button>
-														<Button variant="outline-warning" style={{marginTop: "10px"}}>Add Legendary</Button>
-													</ButtonGroup>
-												</div>
-											</div>
+							</Card>
+							<Card className="col-md-5">
+								<div className="container h-100">
+									<div className="row h-100 justify-content-center align-items-center">
+										<div id="col" className="col-12">
+											<ButtonGroup vertical>
+												<Button variant="outline-primary" style={{marginTop: "10px"}}>Add Ability</Button>
+												<Button variant="outline-info" style={{marginTop: "10px"}}>Add Spellcasting</Button>
+												<Button variant="outline-danger" style={{marginTop: "10px"}}>Add Action</Button>
+												<Button variant="outline-warning" style={{marginTop: "10px"}}>Add Legendary</Button>
+											</ButtonGroup>
 										</div>
-									</Card>
-								</CardGroup>
-								<h2>Senses</h2>
+									</div>
+								</div>
+							</Card>
+						</CardGroup>
+						<h5>Senses</h5>
+						<Senses senses={this.state.senses}
+							changeBlindBeyond={this.changeBlindBeyond}
+							changeSenseType={this.changeSenseType}
+							displayCustom=	{this.equals("Custom Type", this.state.senses.senseType)}
+							changeSenseDistance={this.changeSenseDistance}
+							addSense={this.addSense}
+							/>
 
-								<Senses senses={this.state.senses}
-									changeBlindBeyond={this.changeBlindBeyond}
-									changeSenseType={this.changeSenseType}
-									displayCustom={this.equals("Custom Type", this.state.senses.senseType)}
-									changeSenseDistance={this.changeSenseDistance}
-									addSense={this.addSense}
-								/>
+						<h5>Languages</h5>
 
-								<h2>Languages</h2>
+						<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
+							onChange={this.changeLanguage}
+							addLanguage={this.addLanguage}
+							/>
 
-								<LanguageSelect displayCustom={this.equals("Custom Type", this.state.language)}
-									onChange={this.changeLanguage}
-									addLanguage={this.addLanguage}
-								/>
+						<h5>Skills</h5>
 
-								<h2>Skills</h2>
+						<Skills skills={this.state.skills}
+							onChange={this.changeSkill}
+							addSkill={this.addSkill}
+							/>
 
-								<Skills skills={this.state.skills}
-									onChange={this.changeSkill}
-									addSkill={this.addSkill}
-								/>
+						<ConditionMod changeConditionImmunity={this.changeConditionImmunity}
+							changeDamageType={this.changeDamageType}
+							changeDamageModifier={this.changeDamageModifier}
+							addConditionImmunity={this.addConditionImmunity}
+							addDamageModifier={this.addDamageModifier}
+							/>
 
-								<ConditionMod changeConditionImmunity={this.changeConditionImmunity}
-									changeDamageType={this.changeDamageType}
-									changeDamageModifier={this.changeDamageModifier}
-									addConditionImmunity={this.addConditionImmunity}
-									addDamageModifier={this.addDamageModifier}
-								/>
+						<Button onClick={this.debugButton}>Debug</Button>
+						<Button onClick={this.addStuff}>AddStuff</Button>
+						</Card>
+						<Card className="col-md-5">
+						<Card className="h-25">
+							<Card.Header>{this.state.selectedItem}</Card.Header>
+							<Card.Body>
 
-								<Button onClick={this.debugButton}>Debug</Button>
-								</Card>
-							<Card>
-					</Card>
+							</Card.Body>
+						</Card>
+						<br/>
+						<Card className="h-100">
+							
+							
+						</Card>
+						<br/>
+
+						</Card>
 				</CardGroup>
 			</div>
 		);
 	}
 
+	addStuff = () => {
+		let items2 = [];
+		items2.push({
+			name: "foobar",
+		});
+		this.setState({ items: items2 })
+	}
+
 	debugButton = () => {
 		console.log(this.state);
+	}
+
+	addItem(item) {
+		let items2 = [];
+		items2.push(item);
+		this.setState({ items: items2 })
 	}
 
 	changeName = (e) => {
@@ -211,15 +242,26 @@ class App extends Component {
 
 	addSkill = () => {
 		let skillTemp = { ...this.state.skills };
-
-		skillTemp.skillList.push({
+		let newSkill = {
 			stat: skillTemp.stat,
 			proficient: skillTemp.proficient,
 			skill: skillTemp.skill,
 			bonus: skillTemp.bonus
-		});
+		};
+		skillTemp.skillList.push(newSkill);
 
 		this.setState({ skills: skillTemp });
+		this.addItem({
+			name: this.formatSkill(newSkill),
+		});
+	}
+
+	formatSkill(skill) {
+		let bonus = this.calculateMod(this.state.abilityScores[skill.stat]) + skill.bonus + ((skill.proficient) ? this.state.proficiency : 0);
+		console.log(this.calculateMod(this.state.abilityScores[skill.stat]));
+		console.log(skill.bonus);
+		console.log(((skill.proficient) ? this.state.proficiency : 0));
+		return skill.skill + " " + ((bonus > 0) ? "+" : "") + bonus;
 	}
 
 	changeSkill = () => {
@@ -233,7 +275,7 @@ class App extends Component {
 
 		let skillName = skillStrSplit[0];
 
-		let bonus = document.getElementById("skill-bonus").value;
+		let bonus = parseInt(document.getElementById("skill-bonus").value);
 
 		skillTemp.stat = stat;
 		skillTemp.proficient = isProf;
