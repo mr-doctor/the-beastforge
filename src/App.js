@@ -96,6 +96,7 @@ class App extends Component {
 				type: "",
 			},
 			items: [],
+			abilities: [],
 		};
 	}
 
@@ -150,7 +151,7 @@ class App extends Component {
 									<div className="row h-100 justify-content-center align-items-center">
 										<div id="col" className="col-12">
 											<ButtonGroup vertical>
-												<Button variant="outline-primary" style={{marginTop: "10px"}}>Add Ability</Button>
+												<Button variant="outline-primary" style={{marginTop: "10px"}} onClick={this.addAbility}>Add Ability</Button>
 												<Button variant="outline-info" style={{marginTop: "10px"}}>Add Spellcasting</Button>
 												<Button variant="outline-danger" style={{marginTop: "10px"}}>Add Action</Button>
 												<Button variant="outline-warning" style={{marginTop: "10px"}}>Add Legendary</Button>
@@ -217,7 +218,6 @@ class App extends Component {
 	}
 
 	delete = (item) => {
-		console.log("deleting ", item);
 
 		let itemsTemp = [...this.state.items];
 
@@ -233,8 +233,23 @@ class App extends Component {
 		});
 	}
 
+	addAbility = () => {
+		let count = 0;
+		for (let i = 0; i < this.state.items.length; i++) {
+			if (this.equals("ability", this.state.items[i].type)) {
+				count++;
+			}
+		}
+		count++;
+		this.addItem({
+			name: "Ability " + count,
+			displayName: "Ability " + count,
+			type: "ability",
+			description: "",
+		});
+	}
+
 	select = (item) => {
-		console.log(item)
 		this.setState({ selectedItem: item });
 	}
 
