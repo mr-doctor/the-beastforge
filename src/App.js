@@ -20,8 +20,9 @@ import ConditionMod from './inputs/ConditionMod';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ItemList from './inputs/ItemList';
-import ItemDisplay from './display/ItemDisplay';
+import TraitList from './display/TraitList';
+import TraitDisplay from './display/TraitDisplay';
+import ActionTypePopup from './display/ActionTypePopup'
 
 class App extends Component {
 
@@ -35,7 +36,7 @@ class App extends Component {
 			size: "",
 			type: "",
 			customType: "",
-			AC: "0",
+			AC: 0,
 			ACDescription: "",
 			HPDice: 0,
 			HPDiceType: 4,
@@ -90,12 +91,13 @@ class App extends Component {
 			},
 			conditionImmunities: [],
 			condition: "Blinded",
-			selectedItem: {
+			selectedTrait: {
 				name: " ",
 				displayName: " ",
 				type: "",
+				data: "",
 			},
-			items: [],
+			traits: [],
 			abilities: [],
 		};
 	}
@@ -104,10 +106,10 @@ class App extends Component {
 		return (
 			<div className="App">
 				<CardGroup>
-					<Card className="col-md-10">
+					<Card className="col-md-9">
 						<Form.Control type="text" placeholder="Monster Name" style={{textAlign: "center"}} onChange={this.changeName}/>
 						<CardGroup>
-							<Card className="col-md-10">
+							<Card className="col-md-11">
 								<GenderSelect id="gender-select" onChange={this.changeGender} />
 								
 								<SizeSelect id="size-select" onChange={this.changeSize} />
@@ -116,10 +118,10 @@ class App extends Component {
 
 								<AlignmentSelect id="alignment-select" onChange={this.changeAlignment} />
 
-								<ChangeAC id="changeAC" value={this.state.AC} onChange={this.changeAC} />
+								<ChangeAC id="changeAC" AC={this.state.AC} onChange={this.changeAC} />
 
 								<ManageHP
-									HPDice={this.HPDice}
+									HPDice={this.state.HPDice}
 									changeHPDice={this.changeHPDice}
 									changeHPDiceType={this.changeHPDiceType}
 									HPFormat={this.state.HPFormat}
@@ -131,12 +133,12 @@ class App extends Component {
 
 								<Speeds speeds={this.state.speeds} onChange={this.changeSpeed} />
 							</Card>
-							<Card className="col-md-5">
-								<ItemList list={this.state.items} select={this.select}/>
+							<Card className="col-md-4">
+								<TraitList list={this.state.traits} select={this.select}/>
 							</Card>
 						</CardGroup>
 						<CardGroup>
-							<Card className="col-md-10">
+							<Card className="col-md-11">
 								<h5>Ability Scores</h5>
 
 								<AbilityScores abilityScores={this.state.abilityScores} formatMod={this.formatMod} onChange={this.changeAS} />
@@ -146,14 +148,19 @@ class App extends Component {
 								<SavingThrows savingThrows={this.state.savingThrows} onChange={this.changeSv} />
 
 							</Card>
-							<Card className="col-md-5">
+							<Card className="col-md-4">
 								<div className="container h-100">
-									<div className="row h-100 justify-content-center align-items-center">
+									<div className="row h-100 justify-content-center align-traits-center">
 										<div id="col" className="col-12">
 											<ButtonGroup vertical>
 												<Button variant="outline-primary" style={{marginTop: "10px"}} onClick={this.addAbility}>Add Ability</Button>
 												<Button variant="outline-info" style={{marginTop: "10px"}}>Add Spellcasting</Button>
-												<Button variant="outline-danger" style={{marginTop: "10px"}}>Add Action</Button>
+												<ActionTypePopup
+													addWeaponAttack={this.addWeaponAttack}
+													addBlankAction={this.addBlankAction}
+													addReaction={this.addReaction}
+													addMultiattack={this.addMultiattack}
+													/>
 												<Button variant="outline-warning" style={{marginTop: "10px"}}>Add Legendary</Button>
 											</ButtonGroup>
 										</div>
@@ -198,9 +205,15 @@ class App extends Component {
 
 						<Button onClick={this.debugButton}>Debug</Button>
 						</Card>
-						<Card className="col-md-5">
+						<Card className="col-md-6">
 
-						<ItemDisplay item={this.state.selectedItem} delete={this.delete}/>
+						<TraitDisplay id="trait-display-parent"
+							toHit={this.calculateToHit()}
+							proficiency={this.state.proficiency} 
+							AS={this.state.abilityScores} 
+							trait={this.state.selectedTrait} 
+							delete={this.delete} 
+							editTrait={this.editTrait}/>
 						
 						<Card className="h-100">
 							
@@ -214,59 +227,129 @@ class App extends Component {
 	}
 
 	debugButton = () => {
-		console.log(this.state);
+		console.log(this.state.selectedTrait.data);
 	}
 
-	delete = (item) => {
+	calculateToHit() {
+		if (!this.equals(this.state.selectedTrait.type, "attack")) {
+			return;
+		}
+		let toHit = 0;
+		if (!this.equals(this.state.selectedTrait.data.stat, "")) {
+			toHit += parseInt(this.calculateMod(this.state.abilityScores[this.state.selectedTrait.data.stat]));
+		}
+		toHit += (this.state.selectedTrait.data.proficient) ? this.state.proficiency : 0;
+		toHit += parseInt(this.state.selectedTrait.data.bonus);
 
-		let itemsTemp = [...this.state.items];
+		this.state.selectedTrait.data.toHit = toHit;
+		return toHit;
+	}
 
-		itemsTemp.splice(itemsTemp.indexOf(item), 1);
+	delete = (trait) => {
+
+		let traitsTemp = [...this.state.traits];
+
+		traitsTemp.splice(traitsTemp.indexOf(trait), 1);
 		
 		this.setState({
-			items: itemsTemp,
-			selectedItem: {
+			traits: traitsTemp,
+			selectedTrait: {
 				name: " ",
 				displayName: " ",
 				type: "",
+				data: "",
 			}
+		});
+	}
+
+	addWeaponAttack = () => {
+		let count = 0;
+		for (let i = 0; i < this.state.traits.length; i++) {
+			if (this.equals("attack", this.state.traits[i].type)) {
+				count++;
+			}
+		}
+		count++;
+		this.addTrait({
+			name: "Attack " + count,
+			displayName: "Attack " + count,
+			type: "attack",
+			data: {
+				type: "",
+				toHit: 0,
+				bonus: 0,
+				target: "",
+				targetSize: 0,
+				targetNum: 0,
+				proficient: false,
+				damageDieNum: 0,
+				damageDieType: 0,
+				damageBonus: 0,
+				damageType: "",
+				onHit: "",
+				reach: 5,
+				rangeLow: 5,
+				rangeHigh: 5,
+				stat: "",
+				targetShape: "",
+			},
 		});
 	}
 
 	addAbility = () => {
 		let count = 0;
-		for (let i = 0; i < this.state.items.length; i++) {
-			if (this.equals("ability", this.state.items[i].type)) {
+		for (let i = 0; i < this.state.traits.length; i++) {
+			if (this.equals("ability", this.state.traits[i].type)) {
 				count++;
 			}
 		}
 		count++;
-		this.addItem({
+		this.addTrait({
 			name: "Ability " + count,
 			displayName: "Ability " + count,
 			type: "ability",
-			description: "",
+			data: "",
 		});
 	}
 
-	select = (item) => {
-		this.setState({ selectedItem: item });
+	editTrait = (newTrait) => {
+
+		let traitsTemp = [...this.state.traits];
+
+		traitsTemp[traitsTemp.indexOf(this.state.selectedTrait)] = newTrait;
+		this.setState({
+			traits: traitsTemp,
+			selectedTrait: newTrait,
+		});
 	}
 
-	addItem(item) {
-		var items2 = [...this.state.items];
+	select = (trait) => {
+		let dropdowns = {"attack-stat": "No Stat", "type": "Melee Weapon", "target": "Single Target"}
+		// for (let i = 0; i < dropdowns.length; i++) {
+			let form = document.getElementById("attack-stat");
+			if (form !== null) {
+				// form.reset();
+				console.log(form.value);
+				form.value = "No Stat";
+			}
+		// }
+		this.setState({ selectedTrait: trait });
+	}
+
+	addTrait(trait) {
+		var traits2 = [...this.state.traits];
 		var replace = false;
-		for (let i = 0; i < items2.length; i++) {
-			if (this.equals(items2[i].name, item.name)) {
-				items2[i] = item;
+		for (let i = 0; i < traits2.length; i++) {
+			if (this.equals(traits2[i].name, trait.name)) {
+				traits2[i] = trait;
 				replace = true;
 				break;
 			}
 		}
 		if (!replace) {
-			items2.push(item);
+			traits2.push(trait);
 		}
-		this.setState({ items: items2 });
+		this.setState({ traits: traits2 });
 	}
 
 	changeName = (e) => {
@@ -299,7 +382,7 @@ class App extends Component {
 		tempConditions.push(this.state.condition);
 		this.setState({ conditionImmunities: tempConditions });
 
-		this.addItem({
+		this.addTrait({
 			name: this.state.condition,
 			displayName: this.state.condition,
 			type: "immunity",
@@ -317,7 +400,7 @@ class App extends Component {
 		tempMods.damageMods.push(newMod);
 		this.setState({ damageMods: tempMods });
 
-		this.addItem({
+		this.addTrait({
 			name: newMod.damageType,
 			displayName: newMod.damageType,
 			type: newMod.mod.toLowerCase(),
@@ -335,7 +418,7 @@ class App extends Component {
 		skillTemp.skillList.push(newSkill);
 
 		this.setState({ skills: skillTemp });
-		this.addItem({
+		this.addTrait({
 			displayName: this.formatSkill(newSkill),
 			type: "skill",
 			name: newSkill.skill,
@@ -384,7 +467,7 @@ class App extends Component {
 		langTemp.push(lang);
 
 		this.setState({ languages: langTemp });
-		this.addItem({
+		this.addTrait({
 			name: lang,
 			displayName: lang,
 			type: "language",
@@ -403,7 +486,7 @@ class App extends Component {
 		senseTemp.senseList.push(newSense);
 
 		this.setState({ senses: senseTemp })
-		this.addItem({
+		this.addTrait({
 			name: newSense.name,
 			displayName: (newSense.name + " " + newSense.distance + "ft" + ((newSense.blindBeyond) ? " (Blind beyond)" : "")),
 			type: "sense",
@@ -438,9 +521,6 @@ class App extends Component {
 	}
 
 	changeSv = (e) => {
-		if (e.target.value < 0) {
-			return;
-		}
 		let scoresTemp = { ...this.state.savingThrows }
 		scoresTemp[e.target.id] = e.target.value;
 		this.setState({ savingThrows: scoresTemp });
@@ -452,6 +532,7 @@ class App extends Component {
 		}
 		let scoresTemp = { ...this.state.abilityScores }
 		scoresTemp[e.target.id] = e.target.value;
+
 		this.setState({ abilityScores: scoresTemp });
 	}
 
