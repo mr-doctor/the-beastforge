@@ -26,17 +26,31 @@ class TraitDisplay extends Component {
 	showEditField(trait) {
 		switch (trait.type) {
 			case "ability":
-				return this.showAbilityEditField(trait);
+			case "action":
+			case "reaction":
+			case "multiattack":	
+				return this.showBasicEditField(trait, trait.type);
 			case "attack":
 				return this.showAttackEditField(trait);
+			case "spellcasting":
+				return this.showSpellcastingEdit(trait);
 		}
 	}
 
-	showAbilityEditField(trait) {
+	showBasicEditField(trait, type) {
+		if (this.equals(type, "multiattack") && !trait.edited) {
+			trait.data = "The " + (this.props.monsterName.length === 0) ? "creature" : this.props.monsterName + " makes 1 attack.";
+			trait.edited = true;
+		}
+
 		return (
-			<Form id="ability-edit">
+			<Form id="basic-edit">
 				<Form.Group>
-					<Form.Control value={trait.displayName} placeholder="Ability Name" id="name" onChange={this.editTraitName}></Form.Control>
+					<Form.Control value={trait.displayName} 
+						placeholder={(type.charAt(0).toUpperCase() + type.slice(1)) + " Name"} 
+						id="name" 
+						readOnly={this.equals(type, "multiattack")}
+						onChange={this.editTraitName}></Form.Control>
 					<Form.Label>Description</Form.Label>
 					<Form.Control as="textarea" rows="3" style={{ maxHeight: "135px" }} value={trait.data} onChange={this.editTraitDescription} />
 				</Form.Group>
@@ -88,15 +102,80 @@ class TraitDisplay extends Component {
 		); 
 	}
 
+	showSpellcastingEdit(trait) {
+		return (
+			<Form>
+				<Form.Row >
+					<Col>
+						Spell List
+					</Col>
+					<Col>
+						Spellcaster Level
+					</Col>
+					<Col>
+						Spellcasting Ability
+					</Col>
+				</Form.Row>
+				<Form.Row style={{marginBottom: "15px"}}>
+					<Col>
+						<Form.Control id="type" as="select" onChange={this.editSpellcastingList} value={trait.data.type}>
+							<option>Bard</option>
+							<option>Cleric</option>
+							<option>Druid</option>
+							<option>Paladin</option>
+							<option>Sorcerer</option>
+							<option>Ranger</option>
+							<option>Warlock</option>
+							<option>Wizard</option>
+						</Form.Control>
+					</Col>
+					<Col>
+						<Form.Control id="level" type="number" step={1} value={trait.data.level} onChange={this.editTraitZero}/>
+					</Col>
+					<Col>
+						<Form.Control id="ability" as="select" onChange={this.editTrait} value={trait.data.ability}>
+							<option>Strength</option>
+							<option>Dexterity</option>
+							<option>Constitution</option>
+							<option>Intelligence</option>
+							<option>Wisdom</option>
+							<option>Charisma</option>
+						</Form.Control>
+					</Col>
+				</Form.Row>
+				<Form.Row >
+					<Col>
+						Spell Attack Bonus
+					</Col>
+					<Col>
+						Spell Save DC
+					</Col>
+				</Form.Row>
+				<Form.Row style={{marginBottom: "15px"}}>
+					<Col>
+						<Form.Control style={{align: "center"}} value={this.formatSpellStats(trait, 0)} readOnly/>
+					</Col>
+					<Col>
+						<Form.Control value={this.formatSpellStats(trait, 8)} readOnly/>
+					</Col>
+				</Form.Row>
+			</Form>
+		);
+	}
 
-	// changeBonus = (e) => {
-	// 	let bonus = this.props.trait.bonus;
-	// 	let value = e.target.value;
-		
-	// 	bonus += (bonus - value);
+	formatSpellStats(trait, toAdd) {
+		let statBonus = 0;
+		if (trait.data.ability.length > 0) {
+			statBonus = Math.floor((this.props.AS[trait.data.ability.substring(0, 3).toLowerCase()] - 10) / 2)
+		}
+		let num = statBonus + this.props.proficiency + toAdd;
 
-	// 	console.log(bonus);
-	// }
+		if (num < 0 || toAdd > 0) {
+			return num;
+		} else {
+			return "+" + num;
+		}
+	}
 
 	changeProficient = (e) => {
 		let trait = this.props.trait;
@@ -131,6 +210,29 @@ class TraitDisplay extends Component {
 		let value = e.target.value.substring(0, 3).toLowerCase();
 
 		trait.data["stat"] = (this.equals("no ", value)) ? "" : value;
+		this.props.editTrait(trait);
+	}
+
+	editSpellcastingList = (e) => {
+
+		let trait = this.props.trait;
+
+		trait.name = e.target.value + " Spellcasting";
+		trait.displayName = e.target.value + " Spellcasting";
+		
+		this.props.editTrait(trait);
+
+		this.editTrait(e);
+	}
+
+	editTraitZero = (e) => {
+		let id = e.target.id;
+		let value = e.target.value;
+
+		let trait = this.props.trait;
+		
+		trait.data[id] = Math.max(0, parseInt(value));
+
 		this.props.editTrait(trait);
 	}
 

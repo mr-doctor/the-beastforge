@@ -154,7 +154,7 @@ class App extends Component {
 										<div id="col" className="col-12">
 											<ButtonGroup vertical>
 												<Button variant="outline-primary" style={{marginTop: "10px"}} onClick={this.addAbility}>Add Ability</Button>
-												<Button variant="outline-info" style={{marginTop: "10px"}}>Add Spellcasting</Button>
+												<Button variant="outline-info" style={{marginTop: "10px"}} onClick={this.addSpellcasting}>Add Spellcasting</Button>
 												<ActionTypePopup
 													addWeaponAttack={this.addWeaponAttack}
 													addBlankAction={this.addBlankAction}
@@ -208,6 +208,7 @@ class App extends Component {
 						<Card className="col-md-6">
 
 						<TraitDisplay id="trait-display-parent"
+							monsterName={this.state.monsterName}
 							toHit={this.calculateToHit()}
 							proficiency={this.state.proficiency} 
 							AS={this.state.abilityScores} 
@@ -296,6 +297,55 @@ class App extends Component {
 		});
 	}
 
+	
+	addBlankAction = () => {
+		let count = 0;
+		for (let i = 0; i < this.state.traits.length; i++) {
+			if (this.equals("action", this.state.traits[i].type)) {
+				count++;
+			}
+		}
+		count++;
+		this.addTrait({
+			name: "Action " + count,
+			displayName: "Action " + count,
+			type: "action",
+			data: "",
+		});
+	}
+
+	addReaction = () => {
+		let count = 0;
+		for (let i = 0; i < this.state.traits.length; i++) {
+			if (this.equals("reaction", this.state.traits[i].type)) {
+				count++;
+			}
+		}
+		count++;
+		this.addTrait({
+			name: "Reaction " + count,
+			displayName: "Reaction " + count,
+			type: "reaction",
+			data: "",
+		});
+	}
+
+	addMultiattack = () => {
+		for (let i = 0; i < this.state.traits.length; i++) {
+			if (this.equals("multiattack", this.state.traits[i].type)) {
+				return;
+			}
+		}
+
+		this.addTrait({
+			name: "Multiattack",
+			displayName: "Multiattack",
+			type: "multiattack",
+			data: "",
+			edited: false,
+		});
+	}
+
 	addAbility = () => {
 		let count = 0;
 		for (let i = 0; i < this.state.traits.length; i++) {
@@ -309,6 +359,37 @@ class App extends Component {
 			displayName: "Ability " + count,
 			type: "ability",
 			data: "",
+		});
+	}
+
+	addSpellcasting = () => {
+		for (let i = 0; i < this.state.traits.length; i++) {
+			if (this.equals("spellcasting", this.state.traits[i].type)) {
+				return;
+			}
+		}
+		this.addTrait({
+			name: "Spellcasting",
+			displayName: "Spellcasting",
+			type: "spellcasting",
+			data: {
+				list: "",
+				ability: "Intelligence",
+				level: 0,
+				innate: false,
+				slots: {
+					"1": 0,
+					"2": 0,
+					"3": 0,
+					"4": 0,
+					"5": 0,
+					"6": 0,
+					"7": 0,
+					"8": 0,
+					"9": 0,
+				},
+				spells: [],
+			},
 		});
 	}
 

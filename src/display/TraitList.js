@@ -6,6 +6,9 @@ import ListGroup from 'react-bootstrap/ListGroup'
 class TraitList extends Component {
 	colours = {
 		"attack": "danger",
+		"reaction": "danger",
+		"action": "danger",
+		"multiattack": "danger",
 		"ability": "primary",
 		"spellcasting": "info",
 		"legendary": "warning",
