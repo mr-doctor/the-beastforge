@@ -26,7 +26,7 @@ class AttackStatSelector extends Component {
 						<Form.Control id="to-hit" readOnly value={((this.props.toHit > 0) ? "+" : "") + this.props.toHit}/>
 					</Col>
 					<Col>
-						<Form.Control id="attack-stat" as="select" onChange={this.props.onChange}>
+						<Form.Control id="attack-stat" as="select" onChange={this.props.onChange} value={this.longify(this.props.attackStat)}>
 							<option id="--ignore">No Stat</option>
 							<option id="str">{"Strength (" + this.formatMod(this.props.AS.str) + ")"}</option>
 							<option id="dex">{"Dexterity (" + this.formatMod(this.props.AS.dex) + ")"}</option>
@@ -47,6 +47,23 @@ class AttackStatSelector extends Component {
 				</Form.Row>
 			</div>
 		);
+	}
+
+	longify(stat) {
+		switch(stat) {
+			case "str":
+				return "Strength (" + this.formatMod(this.props.AS.str) + ")";
+			case "dex":
+				return "Dexterity (" + this.formatMod(this.props.AS.dex) + ")";
+			case "con":
+				return "Constitution (" + this.formatMod(this.props.AS.con) + ")";
+			case "int":
+				return "Intelligence (" + this.formatMod(this.props.AS.int) + ")";
+			case "wis":
+				return "Wisdom (" + this.formatMod(this.props.AS.wis) + ")";
+			case "cha":
+				return "Charisma (" + this.formatMod(this.props.AS.cha) + ")";
+		}
 	}
 
 	formatMod(score) {

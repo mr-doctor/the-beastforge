@@ -324,16 +324,23 @@ class App extends Component {
 	}
 
 	select = (trait) => {
-		let dropdowns = {"attack-stat": "No Stat", "type": "Melee Weapon", "target": "Single Target"}
-		// for (let i = 0; i < dropdowns.length; i++) {
-			let form = document.getElementById("attack-stat");
-			if (form !== null) {
-				// form.reset();
-				console.log(form.value);
-				form.value = "No Stat";
-			}
-		// }
+		this.resetAttackDropdowns();
 		this.setState({ selectedTrait: trait });
+	}
+
+	reStat(trait) {
+		switch (trait.data.stat) {
+			case "str":
+				return "Strength (";
+		}
+	}
+
+	resetAttackDropdowns(trait) {
+		let form = document.getElementById("attack-stat");
+		if (form !== null) {
+			//console.log(form.value);
+			form.value = "No Stat";
+		}
 	}
 
 	addTrait(trait) {

@@ -53,7 +53,7 @@ class TraitDisplay extends Component {
 					</Form.Row>
 					<Form.Row style={{marginBottom: "15px"}}>
 						<Col>
-							<Form.Control id="type" as="select" onChange={this.editTrait}>
+							<Form.Control id="type" as="select" onChange={this.editTrait} value={trait.data.type}>
 								<option>Melee Weapon</option>
 								<option>Ranged Weapon</option>
 								<option>Melee/Ranged Weapon</option>
@@ -63,18 +63,19 @@ class TraitDisplay extends Component {
 							</Form.Control>
 						</Col>
 						<Col>
-							<Form.Control id="target" as="select" onChange={this.editTrait}>
+							<Form.Control id="target" as="select" onChange={this.editTrait} value={trait.data.target}>
 								<option>Single Target</option>
 								<option>Single Creature</option>
 								<option>Multiple Creatures</option>
 								<option>Multiple Targets</option>
-								<option>Shape</option>
+								{/* <option>Shape</option> */}
 							</Form.Control>
 						</Col>
 						<CustomTargetInputNum attack={trait} onChange={this.editTrait} />
-						<CustomTargetInputShape attack={trait} onChange={this.editTrait} />
+						{/* <CustomTargetInputShape attack={trait} onChange={this.editTrait} /> */}
 					</Form.Row>
 					<AttackStatSelector 
+						attackStat={this.props.trait.data.stat}
 						toHit={this.props.toHit} 
 						bonus={this.props.trait.data.bonus} 
 						AS={this.props.AS} 
