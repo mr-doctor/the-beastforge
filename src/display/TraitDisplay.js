@@ -153,10 +153,10 @@ class TraitDisplay extends Component {
 				</Form.Row>
 				<Form.Row style={{marginBottom: "15px"}}>
 					<Col>
-						<Form.Control style={{align: "center"}} value={this.formatSpellStats(trait, 0)} readOnly/>
+						<Form.Control style={{textAlign: "center"}} value={this.formatSpellStats(trait, 0)} readOnly/>
 					</Col>
 					<Col>
-						<Form.Control value={this.formatSpellStats(trait, 8)} readOnly/>
+						<Form.Control className="spellcasting-values" value={this.formatSpellStats(trait, 8)} readOnly/>
 					</Col>
 				</Form.Row>
 			</Form>
