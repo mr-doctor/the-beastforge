@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import CustomTargetInputNum from '../inputs/CustomTargetInputNum';
 import CustomTargetInputShape from '../inputs/CustomTargetInputShape';
 import AttackStatSelector from '../inputs/AttackStatSelector';
+import SpellSlots from '../inputs/SpellSlots';
 
 class TraitDisplay extends Component {
 	render() {
@@ -143,7 +144,7 @@ class TraitDisplay extends Component {
 						</Form.Control>
 					</Col>
 				</Form.Row>
-				<Form.Row >
+				<Form.Row>
 					<Col>
 						Spell Attack Bonus
 					</Col>
@@ -156,11 +157,27 @@ class TraitDisplay extends Component {
 						<Form.Control style={{textAlign: "center"}} value={this.formatSpellStats(trait, 0)} readOnly/>
 					</Col>
 					<Col>
-						<Form.Control className="spellcasting-values" value={this.formatSpellStats(trait, 8)} readOnly/>
+						<Form.Control style={{textAlign: "center"}}  value={this.formatSpellStats(trait, 8)} readOnly/>
 					</Col>
 				</Form.Row>
+				<SpellSlots onChange={this.editSpellSlots} slots={trait.data.slots}/>
 			</Form>
 		);
+	}
+
+	editSpellSlots = (e) => {
+		let id = e.target.id;
+		let value = e.target.value;
+
+		let trait = this.props.trait;
+
+		let slots = trait.data.slots;
+		
+		slots[id] = Math.max(0, parseInt(value));
+
+		trait.data.slots = slots;
+
+		this.props.editTrait(trait);
 	}
 
 	formatSpellStats(trait, toAdd) {
