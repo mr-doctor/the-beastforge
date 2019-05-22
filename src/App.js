@@ -377,6 +377,8 @@ class App extends Component {
 				ability: "Intelligence",
 				level: 0,
 				innate: false,
+				spellLevel: 0,
+				spellName: "",
 				slots: {
 					"1": 0,
 					"2": 0,

@@ -7,6 +7,9 @@ class SpellSlots extends Component {
 		return (
 			<Form>
 				<Form.Group>
+				<Form.Row style={{display: "flex", justifyContent: "center"}}>
+					Spell Slots
+				</Form.Row>
 					<Form.Row>
 							<Col>
 								<Form.Label>1st</Form.Label>

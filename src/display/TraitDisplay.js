@@ -7,6 +7,8 @@ import CustomTargetInputNum from '../inputs/CustomTargetInputNum';
 import CustomTargetInputShape from '../inputs/CustomTargetInputShape';
 import AttackStatSelector from '../inputs/AttackStatSelector';
 import SpellSlots from '../inputs/SpellSlots';
+import SpellAdder from '../inputs/SpellAdder';
+import SpellList from './SpellList';
 
 class TraitDisplay extends Component {
 	render() {
@@ -161,8 +163,37 @@ class TraitDisplay extends Component {
 					</Col>
 				</Form.Row>
 				<SpellSlots onChange={this.editSpellSlots} slots={trait.data.slots}/>
+				<Form.Row>
+					<Col>
+						<SpellList list={trait.data.spells} deleteSpell={this.deleteSpell}/>
+					</Col>
+					<Col>
+						<SpellAdder
+							spellLevel={trait.data.spellLevel}
+							spellName={trait.data.spellName}
+							onChangeLevel={this.editTraitZero}
+							onChangeName={this.editTrait}
+							addSpell={this.addSpell}
+						/>
+					</Col>
+				</Form.Row>
 			</Form>
 		);
+	}
+
+	addSpell = () => {
+		let trait = this.props.trait;
+
+		trait.data.spells.push({
+			level: trait.data.spellLevel,
+			name: trait.data.spellName,
+		});
+
+		trait.data.spellName = "";
+		trait.data.spellLevel = 0;
+
+
+		this.props.editTrait(trait);
 	}
 
 	editSpellSlots = (e) => {
