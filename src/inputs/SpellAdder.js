@@ -24,7 +24,6 @@ class SpellAdder extends Component {
 		return (
 			<ButtonToolbar>
 				<Button onClick={this.handleClick}>Add Spell</Button>
-				<DeleteSpellButton deleteSpell={this.props.deleteSpell} selectedSpell={this.props.selectedSpell}/>
 				<Overlay
 					show={this.state.show}
 					target={this.state.target}

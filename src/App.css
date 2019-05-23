@@ -42,7 +42,7 @@
 	left: 50%;
 	-ms-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
-  }
+}
 
 @keyframes App-logo-spin {
 	from {
@@ -51,7 +51,7 @@
 	to {
 		transform: rotate(360deg);
 	}
-}
+} 
 
 .btn-flat {
 	background-color: purple;

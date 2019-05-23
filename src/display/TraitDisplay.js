@@ -165,11 +165,10 @@ class TraitDisplay extends Component {
 				<SpellSlots onChange={this.editSpellSlots} slots={trait.data.slots}/>
 				<Form.Row>
 					<Col>
-						<SpellList list={trait.data.spells} select={this.selectSpell}/>
+						<SpellList list={trait.data.spells} delete={this.deleteSpell}/>
 					</Col>
 					<Col>
 						<SpellAdder 
-							deleteSpell={this.deleteSpell}
 							spellLevel={trait.data.spellLevel}
 							spellName={trait.data.spellName}
 							selectedSpell={trait.data.selectedSpell}
@@ -183,18 +182,8 @@ class TraitDisplay extends Component {
 		);
 	}
 
-	selectSpell = (spell) => {
-
-		let trait = this.props.trait;
-
-		trait.data.selectedSpell = spell;
-
-		this.props.editTrait(trait);
-	}
-
 	deleteSpell = (name, level) => {
 
-		console.log("deleting ", name, level);
 		for (let i = 0; i < this.props.trait.data.spells.length; i++) {
 			let spell = this.props.trait.data.spells[i];
 
