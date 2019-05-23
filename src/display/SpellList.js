@@ -6,7 +6,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 class SpellList extends Component {
 	render() {
 		return (
-			<ListGroup className="list-group" style={{height: "100px", maxHeight: "100px"}}>
+			<ListGroup className="list-group" style={{height: "150px", maxHeight: "150px"}}>
 				{this.props.list.map((spell) => {
 					return (
 						<ListGroup.Item style={{height: "25px"}} key={spell.name}>
