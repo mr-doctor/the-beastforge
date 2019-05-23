@@ -24,7 +24,7 @@ class SpellAdder extends Component {
 		return (
 			<ButtonToolbar>
 				<Button onClick={this.handleClick}>Add Spell</Button>
-
+				<DeleteSpellButton deleteSpell={this.props.deleteSpell} selectedSpell={this.props.selectedSpell}/>
 				<Overlay
 					show={this.state.show}
 					target={this.state.target}
@@ -40,7 +40,7 @@ class SpellAdder extends Component {
 						</Form.Row>
 						<Form.Row style={{marginBottom: "15px"}}>
 							<Col>
-								<Form.Control id="spellLevel" type="number" step={1} value={this.props.spellLevel} onChange={this.props.onChangeLevel} />
+								<Form.Control id="spellLevel" type="number" step={1} value={this.props.spellLevel} onChange={this.onChangeLevel} />
 							</Col>
 							<Col>
 								<Form.Control id="spellName" type="text" step={1} value={this.props.spellName} onChange={this.props.onChangeName} />
@@ -57,10 +57,28 @@ class SpellAdder extends Component {
 		);
 	}
 
+	onChangeLevel = (e) => {
+		this.props.onChangeLevel(e, 0, 9);
+	}
+
 	addSpell = () => {
 		this.props.addSpell();
 
 		this.setState({show: !this.state.show});
+	}
+}
+
+class DeleteSpellButton extends Component {
+	render() {
+		if (this.props.selectedSpell !== null) {
+			console.log(this.props.selectedSpell);
+			return (
+			<Button variant="danger" onClick={() => { this.props.deleteSpell(this.props.selectedSpell.name, this.props.selectedSpell.level) }}>
+				Delete Spell
+			</Button>)
+		} else {
+			return (<br></br>);
+		}
 	}
 }
 

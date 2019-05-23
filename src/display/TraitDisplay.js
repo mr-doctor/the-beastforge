@@ -159,19 +159,21 @@ class TraitDisplay extends Component {
 						<Form.Control style={{textAlign: "center"}} value={this.formatSpellStats(trait, 0)} readOnly/>
 					</Col>
 					<Col>
-						<Form.Control style={{textAlign: "center"}}  value={this.formatSpellStats(trait, 8)} readOnly/>
+						<Form.Control style={{textAlign: "center"}} value={this.formatSpellStats(trait, 8)} readOnly/>
 					</Col>
 				</Form.Row>
 				<SpellSlots onChange={this.editSpellSlots} slots={trait.data.slots}/>
 				<Form.Row>
 					<Col>
-						<SpellList list={trait.data.spells} deleteSpell={this.deleteSpell}/>
+						<SpellList list={trait.data.spells} select={this.selectSpell}/>
 					</Col>
 					<Col>
-						<SpellAdder
+						<SpellAdder 
+							deleteSpell={this.deleteSpell}
 							spellLevel={trait.data.spellLevel}
 							spellName={trait.data.spellName}
-							onChangeLevel={this.editTraitZero}
+							selectedSpell={trait.data.selectedSpell}
+							onChangeLevel={this.editTraitClamp}
 							onChangeName={this.editTrait}
 							addSpell={this.addSpell}
 						/>
@@ -181,8 +183,40 @@ class TraitDisplay extends Component {
 		);
 	}
 
+	selectSpell = (spell) => {
+
+		let trait = this.props.trait;
+
+		trait.data.selectedSpell = spell;
+
+		this.props.editTrait(trait);
+	}
+
+	deleteSpell = (name, level) => {
+
+		console.log("deleting ", name, level);
+		for (let i = 0; i < this.props.trait.data.spells.length; i++) {
+			let spell = this.props.trait.data.spells[i];
+
+			if (this.equals(spell.name, name) && spell.level === level) {
+				let trait = this.props.trait;				
+
+				trait.data.spells.splice(trait.data.spells.indexOf(spell), 1);
+				trait.selectedSpell = null;
+				this.props.editTrait(trait);
+			}
+		}
+	}
+
 	addSpell = () => {
 		let trait = this.props.trait;
+
+		for (let i = 0; i < trait.data.spells.length; i++) {
+			if (this.equals(trait.data.spells[i].name, trait.data.spellName) && 
+				trait.data.spells[i].level === trait.data.spellLevel) {
+				return;
+			}
+		}
 
 		trait.data.spells.push({
 			level: trait.data.spellLevel,
@@ -190,7 +224,7 @@ class TraitDisplay extends Component {
 		});
 
 		trait.data.spellName = "";
-		trait.data.spellLevel = 0;
+		trait.data.spellLevel = 1;
 
 
 		this.props.editTrait(trait);
@@ -271,6 +305,16 @@ class TraitDisplay extends Component {
 		this.props.editTrait(trait);
 
 		this.editTrait(e);
+	}
+
+	editTraitClamp = (e, low, high) => {
+		let id = e.target.id;
+		let value = e.target.value;
+
+		let trait = this.props.trait;
+		trait.data[id] = Math.min(Math.max(low, parseInt(value)), high);
+
+		this.props.editTrait(trait);
 	}
 
 	editTraitZero = (e) => {
