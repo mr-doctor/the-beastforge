@@ -1,11 +1,13 @@
 language: node_js
 node_js:
-  - "10"
+- '10'
 deploy:
   provider: lambda
-  function_name: "The-Beastforge"
-  region: "us-east-1"
-  role: "arn:aws:lambda:us-east-1:917040255001:function:The-Beastforge"
-  runtime: "nodejs10"
-  handler_name: "handler"
-  access_key_id: "AKIAJL6U47TQ2BQWIVLA"
+  function_name: The-Beastforge
+  region: us-east-1
+  role: arn:aws:lambda:us-east-1:917040255001:function:The-Beastforge
+  runtime: nodejs10
+  handler_name: handler
+  access_key_id: AKIAJL6U47TQ2BQWIVLA
+  secret_access_key:
+    secure: "NW7Gl42SPYlVjEC8apjzzhfT6Ekv4jkTA/vJU25am2EpRYsAp0NH+AFwTSIJXVMUuuRLeaI4ATeT3q9OdjYT68QD8/Zwcin0WItO5KegiPCH7pXR922ZJeYIngomRXcKWoSB7mYcXqa55BQiSFCVsi1tq2X1UeJmI98OOqPO1N9gNYm2laG7MBk7NNdfpHWA327w2w71Lhlnn2KWBjts0Rygc7P6yn8Y6NOvQ7zcsUZ0Nadl5GaEKQ9+pd5uVGyQg5/KgSy6HYmbSRsjqyOVeiJ3JmXtBKzTmVB94HnerauG30PdLO6PrXdG1WfoQaeXjK4Nlq3+XIquSZq26xM76APDZBJgWz1ZmHL1YBeR5UnMhXkAQGbfL50PWMuoiGyRApz+x+788COVfxnJP0/mxcceqLFgRun8D/ZfN3g7KvVFAGxPKVxi9wXz3GBnrkCeWvbKCwULcDKhj03hEeLdxL0FIeuxAjwxZi8PvMD144RB81X/SHdCX3XH6gKXZBsLCFguS+XwcellaiTY5zLbN9f+Cw1a7YXLC0qGLnNJJoOtsW23qDbjNhn1V85PkLmr/opmTsh9HPQwFWQAa4aUusATUEPfeueqho/cBdzBKlXPr1KE66xXkavwCae0Hn/mE7ACcVRKwn/I9LpxDNDtvpcnO3GTzgeRzt2hrDWnygY="
