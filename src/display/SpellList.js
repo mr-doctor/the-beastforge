@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 class SpellList extends Component {
 	render() {
 		return (
-			<ListGroup className="list-group" style={{ height: "150px", maxHeight: "150px" }}>
+			<ListGroup className="list-group" style={{ height: "140px", maxHeight: "140px", width: "550px", maxWidth: "550px"}}>
 				{this.props.list.map((spell) => {
 					return (
 						<ListGroup.Item key={spell.name + spell.level} id={spell.name + " " + spell.level} className="spell-display-parent">
