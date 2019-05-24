@@ -44,6 +44,32 @@
 	transform: translate(-50%, -50%);
 }
 
+.v-center {
+	top: 50%;
+}
+
+.spell-display-align-centre {
+	display: flex;
+	margin: 1px;
+	padding: 5px;
+}
+
+.spell-display-parent {
+	position: relative;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.delete-button-align-right {
+	position: absolute;
+	top: -2;
+	right: 0;
+}
+
 @keyframes App-logo-spin {
 	from {
 		transform: rotate(0deg);
