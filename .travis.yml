@@ -11,4 +11,7 @@ branches:
 before_install:
 - pip install --user awscli
 - export PATH=$PATH:$HOME/.local/bin
-script: make build
+install:
+  - npm install -g serverless
+script: 
+  serverless deploy --stage staging
