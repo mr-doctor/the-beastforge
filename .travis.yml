@@ -5,13 +5,10 @@ env:
   global:
   - AWS_ACCESS_KEY_ID=AKIAJL6U47TQ2BQWIVLA
   - AWS_DEFAULT_REGION=us-east-1
-branches:
-  only:
-  - master
-before_install:
-- pip install --user awscli
-- export PATH=$PATH:$HOME/.local/bin
-install:
-  - npm install -g serverless
-script: 
-  serverless deploy --stage staging
+deploy:
+  provider: lambda
+  function_name: "The-Beastforge"
+  region: "us-east-1"
+  role: "arn:aws:lambda:us-east-1:917040255001:function:The-Beastforge"
+  runtime: "nodejs10"
+  handler_name: "handler"
