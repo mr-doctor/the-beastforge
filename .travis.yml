@@ -6,7 +6,7 @@ deploy:
   function_name: The-Beastforge
   region: us-east-1
   role: arn:aws:iam::917040255001:role/service-role/The-Beastforge-role-r616i5q8
-  runtime: nodejs10
+  runtime: nodejs10.x
   handler_name: handler
   access_key_id: AKIAJL6U47TQ2BQWIVLA 
   secret_access_key:
