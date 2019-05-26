@@ -24,12 +24,15 @@ import ActionTypePopup from './display/ActionTypePopup'
 import Col from 'react-bootstrap/Col';
 import Saver from './manage/Saver';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import MonsterList from './display/MonsterList';
 
 class App extends Component {
 
 
 	constructor(props) {
 		super(props);
+
+		this.prevPathName = window.location.pathname;
 
 		this.state = {
 			monsterName: "",
@@ -102,15 +105,18 @@ class App extends Component {
 			traits: [],
 			abilities: [],
 		};
+		this.update();
+	}
 
-		if (window.location.pathname.startsWith('/monster/')){
+	update() {
+		console.log("update", window.location)
+		if (window.location.pathname.startsWith('/monster/')){ 
 			let monsterId = window.location.pathname.replace("/monster/", "");
 			let monsterURL = 'https://the-beastforge-monsters.s3-us-west-2.amazonaws.com/' + monsterId + '.json';
 
 			fetch(monsterURL).then(res => res.json()) 
 			.then(
 			  (result) => {
-					//this.setState(result);
 					this.setState(result);
 					console.log('setState', 'monsterName', result.monsterName);
 					console.log(this.state);
@@ -122,8 +128,8 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-				<Route exact path="/monster/" component={this.HomePage}/>
 				<Route exact path="/" component={this.HomePage}/>
+				<Route exact path="/monster/:id" component={this.HomePage}/>
 				<Route path="/monster-list" component={this.ListPage}/>
 			</Router>
 		);
@@ -133,13 +139,17 @@ class App extends Component {
 		return (
 			<div>
 				<Card style={{width: "25%"}}>
-					
+					<MonsterList></MonsterList>
 				</Card>
 			</div>
 		)
 	}
 
 	HomePage = () => {
+		if (window.location.pathname != this.prevPathName){
+			this.update();
+			this.prevPathName = window.location.pathname;
+		}
 		return (
 			<div className="App">
 				<CardGroup>

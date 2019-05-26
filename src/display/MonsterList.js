@@ -1,50 +1,42 @@
 import React, { Component } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
 import Button from 'react-bootstrap/Button';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 class MonsterList extends Component {
 	constructor(props) {
 		super(props);
-		console.log("foo")
-		let monsterURL = 'https://the-beastforge-monsters.s3-us-west-2.amazonaws.com/';
-		
-		let monsters = [];
-		fetch(monsterURL + 'monsters.json').then(res => res.json())
-			.then(
-				(result) => {
-					for (let i = 0; i < result.length; i++) {
-						
-						monsters.push(this.loadMonster(monsterURL, result[i].monster_id));
-					}
-				}
-			)
-		
-		this.state = {monsters: monsters};
-	}
+		let api = 'https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod';
 
-	loadMonster(url, id) {
-		fetch(url + id + ".json").then(res => res.json())
+		this.state = { monsters: [] };
+		fetch(api + '/list_monsters').then(res => res.json())
 			.then(
 				(result) => {
-					return result;
+					this.setState({ monsters: result.monsters })
 				}
 			)
+
+
 	}
 
 	render() {
+		console.log("rendering", this.state);
 		return (
 			<ListGroup className="list-group">
 				{this.state.monsters.map((monster) => {
 					return (
-						<ListGroup.Item key={monster.monsterName}>
-							{monster.monsterName}
-						</ListGroup.Item>
+						<Link to={"/monster/" + monster.monster_id}>
+							<ListGroup.Item action  key={monster.monster_id}>
+								{monster.name}
+							</ListGroup.Item>
+						</Link>
 					)
 				})
 				}
 			</ListGroup>
 		);
 	}
+
 }
 
 export default MonsterList;
