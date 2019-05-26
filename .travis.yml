@@ -26,6 +26,7 @@ deploy:
   local_dir: build
   # Set the Cache-Control header.
   cache_control: "max-age=21600"
+  region: us-west-2
 after_deploy:
   # Allow `awscli` to make requests to CloudFront.
   - aws configure set preview.cloudfront true
