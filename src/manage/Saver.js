@@ -6,7 +6,7 @@ class Saver extends Component {
 
 	render() {
 		return (
-			<Button onClick={this.save}>Save Monster</Button>
+			<Button onClick={this.save}>Save</Button>
 		);
 	}
 // http://127.0.0.1:5000/

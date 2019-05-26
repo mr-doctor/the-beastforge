@@ -23,6 +23,7 @@ import TraitDisplay from './display/TraitDisplay';
 import ActionTypePopup from './display/ActionTypePopup'
 import Col from 'react-bootstrap/Col';
 import Saver from './manage/Saver';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
 class App extends Component {
 
@@ -106,7 +107,7 @@ class App extends Component {
 			let monsterId = window.location.pathname.replace("/monster/", "");
 			let monsterURL = 'https://the-beastforge-monsters.s3-us-west-2.amazonaws.com/' + monsterId + '.json';
 
-			fetch(monsterURL).then(res => res.json())
+			fetch(monsterURL).then(res => res.json()) 
 			.then(
 			  (result) => {
 					//this.setState(result);
@@ -120,17 +121,42 @@ class App extends Component {
 
 	render() {
 		return (
+			<Router>
+				<Route exact path="/monster/" component={this.HomePage}/>
+				<Route exact path="/" component={this.HomePage}/>
+				<Route path="/monster-list" component={this.ListPage}/>
+			</Router>
+		);
+	}
+
+	ListPage = () => {
+		return (
+			<div>
+				<Card style={{width: "25%"}}>
+					
+				</Card>
+			</div>
+		)
+	}
+
+	HomePage = () => {
+		return (
 			<div className="App">
 				<CardGroup>
 					<Card className="col-md-9">
 						<Form.Row>
-							<Col>
+							<Col style={{display: "flex", flexGrow: 10}}>
 								<Form.Control type="text" placeholder="Monster Name" value={this.state.monsterName} style={{textAlign: "center"}} onChange={this.changeName}/>
 							</Col>
-							<Col>
-								<Saver monster={this.state}>
-
-								</Saver>
+							<Col style={{display: "flex"}}>
+								<Saver monster={this.state}/>
+							</Col>
+							<Col style={{display: "flex"}}>
+								<Link to="/monster-list">
+									<Button>
+										Load
+									</Button>
+								</Link>
 							</Col>
 						</Form.Row>
 						<CardGroup>
