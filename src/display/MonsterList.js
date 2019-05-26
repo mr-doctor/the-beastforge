@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
-import Button from 'react-bootstrap/Button';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Link } from 'react-router-dom';
 
 class MonsterList extends Component {
 	constructor(props) {

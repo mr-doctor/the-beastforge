@@ -146,7 +146,7 @@ class App extends Component {
 	}
 
 	HomePage = () => {
-		if (window.location.pathname != this.prevPathName){
+		if (window.location.pathname !== this.prevPathName){
 			this.update();
 			this.prevPathName = window.location.pathname;
 		}
