@@ -1,22 +1,33 @@
 language: node_js
 node_js:
 - '10'
-# before_install:
-#   # set up awscli packages
-#   - pip install --user awscli
-
-# jobs:
-#   include:
-#     - stage: build
-#       script: npm run build
-#     - stage: deploy
-#       script: aws s3 sync build/ s3://the-beastforge --acl public-read
+install:
+  # Install any dependencies required for building your site here.
+  # `awscli` is required for invalidation of CloudFront distributions.
+  - pip install awscli
+script:
+  # Build your site (e.g., HTML, CSS, JS) here.
+  - make build
 deploy:
+  # Control deployment by setting a value for `on`. Setting the `branch`
+  # option to `master` means Travis will only attempt a deployment on
+  # builds of your repo's master branch (e.g., after you merge a PR).
+  on:
+    branch: master
   provider: s3
-  access_key_id: AKIAJL6U47TQ2BQWIVLA 
-  secret_access_key:
-    secure: "L4e37rEq+73yLfmMqR0NsuywMj6uqsLmeOvEBgkzU50ikaTOvpxkmsA3RGIK4BCP0ESByySCvC+IgoX8VGs5hsrydA3DIVXD7LJ35WQpruyGjW2CxZNVGPe63ch9we0UXLZAewGMmnYYbayIXVM8Vu2fApGvJ1ZC7FFmE+1pafR1ljW3d+w9jjZ1RrjQBkXaN4pT987Brx8zzYIS/XcAdt914CEk7FYJkfCseUivP7O0NJRWlhhWgYgrJwHo6KlClW83k3phoQU9MdnMR7E6Oehlzmc5aa2mllvwRuVbisNQgdDCfRshCRLzmgFnppgOKSKzZ0bWqL+FUoeBmcX2hupUVqBcdGQE/RUqoW6s56ehNy6ze/ja+WxZ0ZkRiiI0epVMEaasPXP/GV5vEb7iE4a7IvL3q7MPcU/QK90JWazcZ+UnS34lrOqnm8xREGH2tRADhjmWGwaMCFkKgYvk6qrgAtL5Pku0bzXUdh7YJteUTG5BK8G4x9xcqk8n+Z0bGs/dxtmRFVMrmUyoGmSO4RM0Iw/+M7MWYnIrkvqn91ojb+9BWW3LSMydE4o5rJtpUI6hk3N0xynd5GRwwuHd3DZFIoBbohoM5lJvE+oH2Xa1s1S1QCx1zgEXXoSJwMxnU0HqUGdOKqYn/q5CKfJVRBEfa5MrVA3ilNQ8ihe0V8g="
-  bucket: "S3 Bucket"
+  # You can refer to environment variables from Travis repo settings!
+  access_key_id: $AWS_ACCESS_KEY_ID
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
+  # Name of the S3 bucket to which your site should be uploaded.
+  bucket: the-beastforge
+  # Prevent Travis from deleting your built site so it can be uploaded.
   skip_cleanup: true
+  # Path to a directory containing your built site.
   local_dir: build
-  region: us-west-2
+  # Set the Cache-Control header.
+  cache_control: "max-age=21600"
+after_deploy:
+  # Allow `awscli` to make requests to CloudFront.
+  - aws configure set preview.cloudfront true
+  # Invalidate every object in the targeted distribution.
+  - aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*"
