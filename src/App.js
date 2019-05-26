@@ -21,12 +21,15 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import TraitList from './display/TraitList';
 import TraitDisplay from './display/TraitDisplay';
 import ActionTypePopup from './display/ActionTypePopup'
+import Col from 'react-bootstrap/Col';
+import Saver from './manage/Saver';
 
 class App extends Component {
 
 
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			monsterName: "",
 			alignment: "",
@@ -98,6 +101,21 @@ class App extends Component {
 			traits: [],
 			abilities: [],
 		};
+
+		if (window.location.pathname.startsWith('/monster/')){
+			let monsterId = window.location.pathname.replace("/monster/", "");
+			let monsterURL = 'https://the-beastforge-monsters.s3-us-west-2.amazonaws.com/' + monsterId + '.json';
+
+			fetch(monsterURL).then(res => res.json())
+			.then(
+			  (result) => {
+					//this.setState(result);
+					this.setState(result);
+					console.log('setState', 'monsterName', result.monsterName);
+					console.log(this.state);
+			  }
+			)
+		}
 	}
 
 	render() {
@@ -105,16 +123,25 @@ class App extends Component {
 			<div className="App">
 				<CardGroup>
 					<Card className="col-md-9">
-						<Form.Control type="text" placeholder="Monster Name" style={{textAlign: "center"}} onChange={this.changeName}/>
+						<Form.Row>
+							<Col>
+								<Form.Control type="text" placeholder="Monster Name" value={this.state.monsterName} style={{textAlign: "center"}} onChange={this.changeName}/>
+							</Col>
+							<Col>
+								<Saver monster={this.state}>
+
+								</Saver>
+							</Col>
+						</Form.Row>
 						<CardGroup>
 							<Card className="col-md-11">
-								<GenderSelect id="gender-select" onChange={this.changeGender} />
+								<GenderSelect id="gender-select" value={this.state.gender} onChange={this.changeGender} />
 								
-								<SizeSelect id="size-select" onChange={this.changeSize} />
+								<SizeSelect id="size-select" value={this.state.size} onChange={this.changeSize} />
 
-								<TypeSelect id="type-select" displayCustom={this.equals("Custom Type", this.state.type)} onChange={this.changeType} />
+								<TypeSelect id="type-select" value={this.state.type} customValue={this.state.customType} displayCustom={this.equals("Custom Type", this.state.type)} onChange={this.changeType} />
 
-								<AlignmentSelect id="alignment-select" onChange={this.changeAlignment} />
+								<AlignmentSelect id="alignment-select" value={this.state.alignment} onChange={this.changeAlignment} />
 
 								<ChangeAC id="changeAC" AC={this.state.AC} onChange={this.changeAC} />
 
@@ -207,7 +234,7 @@ class App extends Component {
 
 						<TraitDisplay id="trait-display-parent"
 							monsterName={this.state.monsterName}
-							toHit={this.calculateToHit()}
+							toHit={this.state.selectedTrait.toHit}
 							proficiency={this.state.proficiency} 
 							AS={this.state.abilityScores} 
 							trait={this.state.selectedTrait} 
@@ -245,7 +272,6 @@ class App extends Component {
 		selectedTraitTemp.data.toHit = toHit;
 
 		this.setState({selectedTrait: selectedTraitTemp})
-		return toHit;
 	}
 
 	delete = (trait) => {

@@ -11,7 +11,7 @@ class GenderSelect extends Component {
 						<Form.Label>Gender</Form.Label>
 					</Col>
 					<Col>
-						<Form.Control id={this.props.id} as="select" onChange={this.props.onChange}>
+						<Form.Control id={this.props.id} value={this.props.value} as="select" onChange={this.props.onChange}>
 							<option>Male</option>
 							<option>Female</option>
 							<option>Neutral</option>

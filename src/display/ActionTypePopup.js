@@ -6,6 +6,16 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 
 class ActionTypePopup extends Component {
 
+	constructor(props, context) {
+		super(props, context);
+
+		this.state = {
+			show: false,
+		};
+
+		
+	}
+
 	popover = (
 		<Popover id="popover-basic" title="Select Action Type" style={{maxWidth: "500px", alignItems: "center"}}>
 			<ButtonToolbar>
@@ -19,10 +29,20 @@ class ActionTypePopup extends Component {
 
 	render() {
 		return (
-			<OverlayTrigger trigger="click" placement="top" overlay={this.popover}>
+			<OverlayTrigger trigger="click" show={this.state.show} placement="top" overlay={this.popover}>
 				<Button variant="outline-danger" style={{marginTop: "10px"}}>Add Action</Button>
 			</OverlayTrigger>
 		);
+	}
+
+	handleClick = () => {
+		this.setState({show: !this.state.show});
+	};
+
+	onClick(func) {
+		this.setState({show: !this.state.show});
+
+		func();
 	}
 }
 

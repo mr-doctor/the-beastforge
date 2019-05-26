@@ -12,7 +12,7 @@ class TypeSelect extends Component {
 							<Form.Label>Type</Form.Label>
 						</Col>
 						<Col>
-							<Form.Control id="monster-type" as="select" onChange={this.props.onChange}>
+							<Form.Control id="monster-type" as="select" value={this.props.value} onChange={this.props.onChange}>
 								<option>Aberration</option>
 								<option>Beast</option>
 								<option>Celestial</option>
@@ -31,7 +31,7 @@ class TypeSelect extends Component {
 							</Form.Control>
 						</Col>
 						<Col>
-							<CustomType display={this.props.displayCustom} onChange={this.props.onChange}/>
+							<CustomType display={this.props.displayCustom} value={this.props.customValue} onChange={this.props.onChange}/>
 						</Col>
 					</Form.Row>
 				</Form.Group>

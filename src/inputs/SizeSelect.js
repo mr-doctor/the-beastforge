@@ -11,7 +11,7 @@ class SizeSelect extends Component {
 							<Form.Label>Size</Form.Label>
 						</Col>
 						<Col>
-							<Form.Control id={this.props.id} as="select" onChange={this.props.onChange}>
+							<Form.Control id={this.props.id} value={this.props.value} as="select" onChange={this.props.onChange}>
 								<option>Tiny</option>
 								<option>Small</option>
 								<option>Medium</option>

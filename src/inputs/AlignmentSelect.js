@@ -11,7 +11,7 @@ class AlignmentSelect extends Component {
 						<Form.Label>Alignment</Form.Label>
 					</Col>
 					<Col>
-						<Form.Control id={this.props.id} as="select" onChange={this.props.onChange}>
+						<Form.Control id={this.props.id} as="select" value={this.props.value} onChange={this.props.onChange}>
 							<option>Unaligned</option>
 							<option>Lawful Good</option>
 							<option>Lawful Neutral</option>
