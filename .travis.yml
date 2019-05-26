@@ -5,8 +5,8 @@ install:
   # Install any dependencies required for building your site here.
   # `awscli` is required for invalidation of CloudFront distributions.
   - pip install awscli --user
+  - npm install --only=production
 
-script: npm install --only=production
 script: npm run build
     
 deploy:
