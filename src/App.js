@@ -105,7 +105,7 @@ class App extends Component {
 			<div className="App">
 				<CardGroup>
 					<Card className="col-md-9">
-						<Form.Control type="text" placeholder="Monster Name" style={{textAlign: "center"}} onChange={this.changeName}/>
+						<Form.Control type="text" placeholder="GIANT FISH" style={{textAlign: "center"}} onChange={this.changeName}/>
 						<CardGroup>
 							<Card className="col-md-11">
 								<GenderSelect id="gender-select" onChange={this.changeGender} />
