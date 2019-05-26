@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
-import { BrowserRouter as Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class MonsterList extends Component {
 	constructor(props) {
@@ -25,7 +25,7 @@ class MonsterList extends Component {
 				{this.state.monsters.map((monster) => {
 					return (
 						<Link to={"/monster/" + monster.monster_id}>
-							<ListGroup.Item action  key={monster.monster_id}>
+							<ListGroup.Item action key={monster.monster_id}>
 								{monster.name}
 							</ListGroup.Item>
 						</Link>
