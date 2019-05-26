@@ -36,9 +36,25 @@ class TraitDisplay extends Component {
 				return this.showAttackEditField(trait);
 			case "spellcasting":
 				return this.showSpellcastingEdit(trait);
+			case "legendary":
+				return this.showLegendaryEdit(trait);
 			default:
 				return;
 		}
+	}
+
+	showLegendaryEdit(trait) {
+		return (
+			<Form id="legendary-edit">
+				<Form.Group>
+					<Form.Row style={{marginBottom: "15px"}}>
+						<Form.Control value={trait.displayName} id="name" readOnly></Form.Control>
+					</Form.Row>
+					<Form.Label>Description</Form.Label>
+					<Form.Control as="textarea" rows="3" style={{ maxHeight: "135px" }} value={trait.data} onChange={this.editTraitDescription} />
+				</Form.Group>
+			</Form>
+		);
 	}
 
 	showBasicEditField(trait, type) {

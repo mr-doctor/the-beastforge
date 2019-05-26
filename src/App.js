@@ -105,7 +105,7 @@ class App extends Component {
 			<div className="App">
 				<CardGroup>
 					<Card className="col-md-9">
-						<Form.Control type="text" placeholder="GIANT FISH" style={{textAlign: "center"}} onChange={this.changeName}/>
+						<Form.Control type="text" placeholder="Monster Name" style={{textAlign: "center"}} onChange={this.changeName}/>
 						<CardGroup>
 							<Card className="col-md-11">
 								<GenderSelect id="gender-select" onChange={this.changeGender} />
@@ -159,7 +159,7 @@ class App extends Component {
 													addReaction={this.addReaction}
 													addMultiattack={this.addMultiattack}
 													/>
-												<Button variant="outline-warning" style={{marginTop: "10px"}}>Add Legendary</Button>
+												<Button variant="outline-warning" style={{marginTop: "10px"}} onClick={this.addLegendary}>Add Legendary</Button>
 											</ButtonGroup>
 										</div>
 									</div>
@@ -394,6 +394,26 @@ class App extends Component {
 					"9": 0,
 				},
 				spells: [],
+			},
+		});
+	}
+
+	addLegendary = () => {
+		for (let i = 0; i < this.state.traits.length; i++) {
+			if (this.equals("legendary", this.state.traits[i].type)) {
+				return;
+			}
+		}
+		this.addTrait({
+			name: "Legendary Actions",
+			displayName: "Legendary Actions",
+			type: "legendary",
+			numActions: 3,
+			tempName: "",
+			tempDescription: "",
+			tempCost: 1,
+			data: {
+				actions: [],
 			},
 		});
 	}
