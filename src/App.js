@@ -126,6 +126,7 @@ class App extends Component {
 	}
 
 	render() {
+		console.log("rendering")
 		return (
 			<Router>
 				<Route exact path="/" component={this.HomePage}/>
