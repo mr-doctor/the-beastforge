@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
-import CustomType from './CustomType';
 import Button from 'react-bootstrap/Button';
 
 class Skills extends Component {

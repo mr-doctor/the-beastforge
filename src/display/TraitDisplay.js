@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import CustomTargetInputNum from '../inputs/CustomTargetInputNum';
-import CustomTargetInputShape from '../inputs/CustomTargetInputShape';
 import AttackStatSelector from '../inputs/AttackStatSelector';
 import SpellSlots from '../inputs/SpellSlots';
 import SpellAdder from '../inputs/SpellAdder';
@@ -37,6 +36,8 @@ class TraitDisplay extends Component {
 				return this.showAttackEditField(trait);
 			case "spellcasting":
 				return this.showSpellcastingEdit(trait);
+			default:
+				throw error("unsupported trait type ", trait.type);
 		}
 	}
 
@@ -275,7 +276,6 @@ class TraitDisplay extends Component {
 	}
 
 	editTraitAttackStat = (e) => {
-		let id = e.target.id;
 		let trait = this.props.trait;
 
 		let value = e.target.value.substring(0, 3).toLowerCase();

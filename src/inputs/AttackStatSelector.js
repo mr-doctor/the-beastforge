@@ -63,6 +63,8 @@ class AttackStatSelector extends Component {
 				return "Wisdom (" + this.formatMod(this.props.AS.wis) + ")";
 			case "cha":
 				return "Charisma (" + this.formatMod(this.props.AS.cha) + ")";
+			default:
+				return "";
 		}
 	}
 

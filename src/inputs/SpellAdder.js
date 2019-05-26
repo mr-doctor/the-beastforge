@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import Button from 'react-bootstrap/Button';
 import Overlay from 'react-bootstrap/Overlay';
@@ -67,18 +66,18 @@ class SpellAdder extends Component {
 	}
 }
 
-class DeleteSpellButton extends Component {
-	render() {
-		if (this.props.selectedSpell !== null) {
-			console.log(this.props.selectedSpell);
-			return (
-			<Button variant="danger" onClick={() => { this.props.deleteSpell(this.props.selectedSpell.name, this.props.selectedSpell.level) }}>
-				Delete Spell
-			</Button>)
-		} else {
-			return (<br></br>);
-		}
-	}
-}
+// class DeleteSpellButton extends Component {
+// 	render() {
+// 		if (this.props.selectedSpell !== null) {
+// 			console.log(this.props.selectedSpell);
+// 			return (
+// 			<Button variant="danger" onClick={() => { this.props.deleteSpell(this.props.selectedSpell.name, this.props.selectedSpell.level) }}>
+// 				Delete Spell
+// 			</Button>)
+// 		} else {
+// 			return (<br></br>);
+// 		}
+// 	}
+// }
 
 export default SpellAdder;

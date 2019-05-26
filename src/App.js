@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import CustomType from './inputs/CustomType'
 import GenderSelect from './inputs/GenderSelect';
 import SizeSelect from './inputs/SizeSelect';
 import TypeSelect from './inputs/TypeSelect';
@@ -242,7 +240,11 @@ class App extends Component {
 		toHit += (this.state.selectedTrait.data.proficient) ? this.state.proficiency : 0;
 		toHit += parseInt(this.state.selectedTrait.data.bonus);
 
-		this.state.selectedTrait.data.toHit = toHit;
+		let selectedTraitTemp = this.state.selectedTrait;
+
+		selectedTraitTemp.data.toHit = toHit;
+
+		this.setState({selectedTrait: selectedTraitTemp})
 		return toHit;
 	}
 
@@ -410,13 +412,6 @@ class App extends Component {
 	select = (trait) => {
 		this.resetAttackDropdowns();
 		this.setState({ selectedTrait: trait });
-	}
-
-	reStat(trait) {
-		switch (trait.data.stat) {
-			case "str":
-				return "Strength (";
-		}
 	}
 
 	resetAttackDropdowns(trait) {
