@@ -37,7 +37,7 @@ class TraitDisplay extends Component {
 			case "spellcasting":
 				return this.showSpellcastingEdit(trait);
 			default:
-				throw "Unsupported trait type " + trait.type;
+				return;
 		}
 	}
 
