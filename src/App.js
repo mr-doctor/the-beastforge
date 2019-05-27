@@ -417,6 +417,9 @@ class App extends Component {
 	}
 
 	addAbility = () => {
+		if (this.state.traits.length >= 32) {
+			return;
+		}
 		let count = 0;
 		for (let i = 0; i < this.state.traits.length; i++) {
 			if (this.equals("ability", this.state.traits[i].type)) {
@@ -511,6 +514,9 @@ class App extends Component {
 	}
 
 	addTrait(trait) {
+		if (this.state.traits.length >= 32) {
+			return;
+		}
 		var traits2 = [...this.state.traits];
 		var replace = false;
 		for (let i = 0; i < traits2.length; i++) {

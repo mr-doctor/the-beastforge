@@ -3,46 +3,70 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Button from 'react-bootstrap/Button'
 import Popover from 'react-bootstrap/Popover'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
+import Overlay from 'react-bootstrap/Overlay';
 
 class ActionTypePopup extends Component {
 
 	constructor(props, context) {
 		super(props, context);
 
+
+		this.handleClick = ({ target }) => {
+			this.setState(s => ({ target, show: !s.show }));
+		};
+
 		this.state = {
 			show: false,
 		};
-
 		
 	}
 
-	popover = (
-		<Popover id="popover-basic" title="Select Action Type" style={{maxWidth: "500px", alignItems: "center"}}>
-			<ButtonToolbar>
-    			<Button variant="outline-danger" style={{margin: "5px"}} onClick={this.props.addWeaponAttack}>Attack</Button>
-				<Button variant="outline-danger" style={{margin: "5px"}} onClick={this.props.addBlankAction}>Action</Button>
-				<Button variant="outline-danger" style={{margin: "5px"}} onClick={this.props.addReaction}>Reaction</Button>
-				<Button variant="outline-danger" style={{margin: "5px"}} onClick={this.props.addMultiattack}>Multiattack</Button>
-			</ButtonToolbar>
-  		</Popover>
-	);
-
 	render() {
 		return (
-			<OverlayTrigger trigger="click" show={this.state.show} placement="top" overlay={this.popover}>
-				<Button variant="outline-danger" style={{marginTop: "10px"}}>Add Action</Button>
-			</OverlayTrigger>
+			<div>
+				<Button variant="outline-danger" onClick={this.handleClick} style={{borderRadius: "0px", width: "150px", marginTop: "10px"}}>Add Action</Button>
+				<Overlay
+					show={this.state.show} 	
+					target={this.state.target}
+					placement="top"
+					container={this}
+					containerPadding={20}>
+					<Popover id="popover-basic" title="Select Action Type" style={{ maxWidth: "410px", width: "410px"}}>
+						<ButtonToolbar style={{display: "flex", justifyContent: "space-between" }}>
+							<Button variant="outline-danger" style={{ margin: "5px" }} onClick={this.addWeaponAttack}>Attack</Button>
+							<Button variant="outline-danger" style={{ margin: "5px" }} onClick={this.addBlankAction}>Action</Button>
+							<Button variant="outline-danger" style={{ margin: "5px" }} onClick={this.addReaction}>Reaction</Button>
+							<Button variant="outline-danger" style={{ margin: "5px" }} onClick={this.addMultiattack}>Multiattack</Button>
+						</ButtonToolbar>
+					</Popover>
+				</Overlay>
+			</div>
 		);
 	}
 
-	handleClick = () => {
-		this.setState({show: !this.state.show});
-	};
+	toggleShow() {
+		console.log("hey")
+		this.setState({show: false});
+	}
 
-	onClick(func) {
-		this.setState({show: !this.state.show});
+	addWeaponAttack = (e) => {
+		this.props.addWeaponAttack(e);
+		this.toggleShow();
+	}
 
-		func();
+	addBlankAction = (e) => {
+		this.props.addBlankAction(e);
+		this.toggleShow();
+	}
+	
+	addReaction = (e) => {
+		this.props.addReaction(e);
+		this.toggleShow();
+	}
+
+	addMultiattack = (e) => {
+		this.props.addMultiattack(e);
+		this.toggleShow();
 	}
 }
 
