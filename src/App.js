@@ -27,9 +27,6 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import MonsterList from './display/MonsterList';
 
 export const MAX_NUMBER = 4096;
-String.prototype.equals = function(other) {
-	return this.localeCompare(other) === 0;
-};
 
 class App extends Component {
 
@@ -612,10 +609,10 @@ class App extends Component {
 		let stat = skillStrSplit[1].replace(/[()]/g, '').toLowerCase();
 
 		let isProf = skillTemp.proficient;
-		if (e.target.id.equals("proficient")) {
+		if (this.equals(e.target.id, "proficient")) {
 			isProf = !skillTemp.proficient;
 		}
-
+ 
 		let skillName = skillStrSplit[0];
 
 		let bonus = parseInt(document.getElementById("skill-bonus").value);

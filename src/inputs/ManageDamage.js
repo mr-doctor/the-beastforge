@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
-import Button from 'react-bootstrap/Button';
 
 class ManageDamage extends Component {
 	render() {

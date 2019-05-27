@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Button from 'react-bootstrap/Button'
 import Popover from 'react-bootstrap/Popover'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
