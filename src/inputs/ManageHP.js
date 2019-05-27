@@ -16,13 +16,13 @@ class ManageHP extends Component {
 							<Form.Control id="HP-dice-input" type="number" step={1} value={this.props.HPDice} onChange={this.props.changeHPDice} />
 						</Col>
 						<Col>
-							<Form.Control id="hp-type" as="select" onChange={this.props.changeHPDiceType}>
+							<Form.Control id="hp-type" as="select" value={this.props.HPDiceType} onChange={this.props.changeHPDiceType}>
 								<option value={4}>d4</option>
 								<option value={6}>d6</option>
 								<option value={8}>d8</option>
 								<option value={10}>d10</option>
 								<option value={12}>d12</option>
-								<option value={20}>d20</option>
+								<option value={20}>d20</option> 
 							</Form.Control>
 						</Col>
 						<Col>

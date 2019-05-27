@@ -184,6 +184,7 @@ class App extends Component {
 
 								<ManageHP
 									HPDice={this.state.HPDice}
+									HPDiceType={this.state.HPDiceType}
 									changeHPDice={this.changeHPDice}
 									changeHPDiceType={this.changeHPDiceType}
 									HPFormat={this.state.HPFormat}
@@ -719,15 +720,15 @@ class App extends Component {
 	}
 
 	changeGender = (e) => {
-		this.setState({ gender: e });
+		this.setState({ gender: e.target.value });
 	};
 
 	changeSize = (e) => {
-		this.setState({ size: e });
+		this.setState({ size: e.target.value });
 	};
 
 	changeAlignment = (e) => {
-		this.setState({ alignment: e });
+		this.setState({ alignment: e.target.value });
 	};
 
 	changeType = (e) => {
@@ -806,7 +807,8 @@ class App extends Component {
 	}
 
 	calculate(dice, diceType, con) {
-		return ((diceType / 2 + Math.max(0, this.calculateMod(con))) * dice)
+		diceType = parseInt(diceType);
+		return Math.floor(((diceType + 1.0) / 2.0 + Math.max(0, this.calculateMod(con))) * dice);
 	}
 
 	formatMod(score) {
