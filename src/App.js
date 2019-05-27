@@ -129,7 +129,6 @@ class App extends Component {
 	}
 
 	render() {
-		console.log("rendering")
 		return (
 			<Router>
 				<Route exact path="/" component={this.HomePage}/>
@@ -357,6 +356,7 @@ class App extends Component {
 				damageDieType: 0,
 				damageBonus: 0,
 				damageType: "",
+				damage: 0,
 				onHit: "",
 				reach: 5,
 				rangeLow: 5,

@@ -9,6 +9,7 @@ import SpellSlots from '../inputs/SpellSlots';
 import SpellAdder from '../inputs/SpellAdder';
 import SpellList from './SpellList';
 import MAX_NUMBER from '../App';
+import ManageDamage from '../inputs/ManageDamage';
 
 class TraitDisplay extends Component {
 	render() {
@@ -112,12 +113,38 @@ class TraitDisplay extends Component {
 					<AttackStatSelector 
 						attackStat={this.props.trait.data.stat}
 						toHit={this.props.toHit} 
-						bonus={this.props.trait.data.bonus} 
-						AS={this.props.AS} 
+						bonus={this.props.trait.data.bonus}
+						AS={this.props.AS}
 						proficient={this.props.trait.data.proficient}
-						changeBonus={this.editTrait} 
-						changeProficient={this.changeProficient} 
+						changeBonus={this.editTrait}
+						changeProficient={this.changeProficient}
 						onChange={this.editTraitAttackStat} />
+					<Form.Row style={{ marginBottom: "15px" }}>
+						<Col>
+							<ManageDamage data={trait.data} 
+								damage={this.calculateDamage()}
+								onChange={this.updateDamage} 
+								onChangeZero={this.updateDamage} 
+								onChangeDice={this.updateDamage}
+							/>
+						</Col>
+						
+					</Form.Row>
+					<Form.Row style={{ marginBottom: "15px" }}>
+						<Col>
+							<Form.Control value={trait.data.onHit} placeholder="On Hit" id="onHit" onChange={this.editTrait}></Form.Control>
+						</Col>
+					</Form.Row>
+					{/* <Form.Row style={{ marginBottom: "15px" }}>
+						<Col>
+							<Form.Control value={trait.data.onHit} placeholder="On Hit" id="onHit" onChange={this.editTrait}></Form.Control>
+						</Col>
+					</Form.Row>
+					<Form.Row>
+						<Col>
+							<Form.Control value={trait.data.onHit} placeholder="On Hit" id="onHit" onChange={this.editTrait}></Form.Control>
+						</Col>
+					</Form.Row> */}
 				</Form.Group>
 			</Form>
 		); 
@@ -200,10 +227,61 @@ class TraitDisplay extends Component {
 		);
 	}
 
+	calculateDamage() {
+		let trait = this.props.trait;
+		let stat = this.props.AS[trait.data.stat];
+		if (typeof stat === "undefined") {
+			stat = 10;
+		}
+		let dmg = this.calculate(trait.data.damageDieNum, trait.data.damageDieType, parseInt(stat), trait.data.damageBonus);
+		// trait.data.damage = dmg;
+		// this.props.editTrait(trait);
+		return dmg;
+	}
+
+	updateDamage = (e) => {
+		// if ("--ignore".localeCompare(e) !== 0) {
+			switch (e.target.id) {
+				case "damageDieNum":
+					this.editTraitZero(e);
+					break;
+				case "damageDieType":
+					this.onChangeDice(e);
+					break;
+				default:
+					this.editTrait(e);
+					break;
+			}
+		// }
+	}
+
+	calculate(dice, diceType, stat, bonus) {
+		return Math.floor(((diceType + 1.0) / 2.0) * dice + this.calculateMod(stat)) + bonus;
+	}
+
+	calculateMod(score) {
+		return Math.floor((score - 10) / 2);
+	}
+
+	onChangeDice = (e) => {
+		let id = e.target.id;
+		let value = e.target.value;
+
+		let dice = value.replace("d", "");
+
+		let trait = this.props.trait;
+
+		trait.data[id] = parseInt(dice);
+
+		this.props.editTrait(trait);
+	}
+
 	limitToMax(value) {
 		if (value > MAX_NUMBER) {
 			return value;
 		}
+
+		return value;
 	}
 
 	deleteSpell = (name, level) => {
@@ -299,6 +377,7 @@ class TraitDisplay extends Component {
 	}
 
 	editTraitAttackStat = (e) => {
+
 		let trait = this.props.trait;
 
 		let value = e.target.value.substring(0, 3).toLowerCase();
@@ -345,8 +424,8 @@ class TraitDisplay extends Component {
 		let value = e.target.value;
 
 		let trait = this.props.trait;
-		
-		trait.data[id] = (Number.isInteger(value)) ? this.limitToMax(parseInt(value)) : value;
+
+		trait.data[id] = (!isNaN(parseInt(value))) ? this.limitToMax(parseInt(value)) : value;
 
 		this.props.editTrait(trait);
 	}
