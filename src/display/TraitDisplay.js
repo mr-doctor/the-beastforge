@@ -8,6 +8,7 @@ import AttackStatSelector from '../inputs/AttackStatSelector';
 import SpellSlots from '../inputs/SpellSlots';
 import SpellAdder from '../inputs/SpellAdder';
 import SpellList from './SpellList';
+import MAX_NUMBER from '../App';
 
 class TraitDisplay extends Component {
 	render() {
@@ -199,6 +200,12 @@ class TraitDisplay extends Component {
 		);
 	}
 
+	limitToMax(value) {
+		if (value > MAX_NUMBER) {
+			return value;
+		}
+	}
+
 	deleteSpell = (name, level) => {
 
 		for (let i = 0; i < this.props.trait.data.spells.length; i++) {
@@ -244,7 +251,7 @@ class TraitDisplay extends Component {
 
 		let slots = trait.data.slots;
 		
-		slots[id] = Math.max(0, parseInt(value));
+		slots[id] = this.limitToMax(Math.max(0, parseInt(value)));
 
 		trait.data.slots = slots;
 
@@ -328,7 +335,7 @@ class TraitDisplay extends Component {
 
 		let trait = this.props.trait;
 		
-		trait.data[id] = Math.max(0, parseInt(value));
+		trait.data[id] = this.limitToMax(Math.max(0, parseInt(value)));
 
 		this.props.editTrait(trait);
 	}
@@ -339,7 +346,7 @@ class TraitDisplay extends Component {
 
 		let trait = this.props.trait;
 		
-		trait.data[id] = (Number.isInteger(value)) ? parseInt(value) : value;
+		trait.data[id] = (Number.isInteger(value)) ? this.limitToMax(parseInt(value)) : value;
 
 		this.props.editTrait(trait);
 	}

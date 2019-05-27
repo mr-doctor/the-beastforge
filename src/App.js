@@ -26,6 +26,8 @@ import Saver from './manage/Saver';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import MonsterList from './display/MonsterList';
 
+export const MAX_NUMBER = 4096;
+
 class App extends Component {
 
 
@@ -101,6 +103,7 @@ class App extends Component {
 				displayName: " ",
 				type: "",
 				data: "",
+				toHit: 0,
 			},
 			traits: [],
 			abilities: [],
@@ -272,7 +275,7 @@ class App extends Component {
 
 						<TraitDisplay id="trait-display-parent"
 							monsterName={this.state.monsterName}
-							toHit={this.state.selectedTrait.toHit}
+							toHit={this.calculateToHit()}
 							proficiency={this.state.proficiency} 
 							AS={this.state.abilityScores} 
 							trait={this.state.selectedTrait} 
@@ -305,11 +308,12 @@ class App extends Component {
 		toHit += (this.state.selectedTrait.data.proficient) ? this.state.proficiency : 0;
 		toHit += parseInt(this.state.selectedTrait.data.bonus);
 
-		let selectedTraitTemp = this.state.selectedTrait;
+		// let selectedTraitTemp = this.state.selectedTrait;
 
-		selectedTraitTemp.data.toHit = toHit;
+		// selectedTraitTemp.data.toHit = toHit;
 
-		this.setState({selectedTrait: selectedTraitTemp})
+		// this.setState({selectedTrait: selectedTraitTemp})
+		return toHit;
 	}
 
 	delete = (trait) => {
@@ -612,7 +616,9 @@ class App extends Component {
 		let skillName = skillStrSplit[0];
 
 		let bonus = parseInt(document.getElementById("skill-bonus").value);
-
+		if (bonus < -MAX_NUMBER || bonus > MAX_NUMBER) {
+			return;
+		}
 		skillTemp.stat = stat;
 		skillTemp.proficient = isProf;
 		skillTemp.skill = skillName;
@@ -682,7 +688,7 @@ class App extends Component {
 	}
 
 	changeSenseDistance = (e) => {
-		if (e.target.value < 0) {
+		if (e.target.value < 0 || e.target.value > MAX_NUMBER) {
 			return;
 		}
 		let senseTemp = { ...this.state.senses }
@@ -691,13 +697,17 @@ class App extends Component {
 	}
 
 	changeSv = (e) => {
+		if (e.target.value < -MAX_NUMBER  || e.target.value > MAX_NUMBER) {
+			return;
+		}
+
 		let scoresTemp = { ...this.state.savingThrows }
 		scoresTemp[e.target.id] = e.target.value;
 		this.setState({ savingThrows: scoresTemp });
 	}
 
 	changeAS = (e) => {
-		if (e.target.value < 0) {
+		if (e.target.value < 0 || e.target.value > MAX_NUMBER) {
 			return;
 		}
 		let scoresTemp = { ...this.state.abilityScores }
@@ -707,7 +717,7 @@ class App extends Component {
 	}
 
 	changeSpeed = (e) => {
-		if (e.target.value < 0) {
+		if (e.target.value < 0 || e.target.value > MAX_NUMBER) {
 			return;
 		}
 		let speedsTemp = { ...this.state.speeds }
@@ -744,21 +754,18 @@ class App extends Component {
 	}
 
 	changeAC = (e) => {
-		if (e.target.value < 0) {
+		if (e.target.value < 0 || e.target.value > MAX_NUMBER) {
 			return;
 		}
 		this.setState({ AC: e.target.value });
 	}
 
 	changeACDescription = (e) => {
-		if (e.target.value < 0) {
-			return;
-		}
-		this.setState({ AC: e.target.value });
+		this.setState({ ACDescription: e.target.value });
 	}
 
 	changeHPDice = (e) => {
-		if (e.target.value < 0) {
+		if (e.target.value < 0 || e.target.value > MAX_NUMBER) {
 			return;
 		}
 		this.setState({ HPDice: e.target.value });
