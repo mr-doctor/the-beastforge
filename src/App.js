@@ -27,6 +27,9 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import MonsterList from './display/MonsterList';
 
 export const MAX_NUMBER = 4096;
+String.prototype.equals = function(other) {
+	return this.localeCompare(other) === 0;
+};
 
 class App extends Component {
 
@@ -601,14 +604,17 @@ class App extends Component {
 		return skill.skill + " " + ((bonus >= 0) ? "+" : "") + bonus;
 	}
 
-	changeSkill = () => {
+	changeSkill = (e) => {
 		let skillTemp = { ...this.state.skills }
 
 		let skillStrSplit = document.getElementById("skill-select").value.split(" ");
 
 		let stat = skillStrSplit[1].replace(/[()]/g, '').toLowerCase();
 
-		let isProf = !skillTemp.proficient;
+		let isProf = skillTemp.proficient;
+		if (e.target.id.equals("proficient")) {
+			isProf = !skillTemp.proficient;
+		}
 
 		let skillName = skillStrSplit[0];
 
@@ -829,6 +835,9 @@ class App extends Component {
 		max = Math.floor(max);
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
+
+	
 }
+
 
 export default App;

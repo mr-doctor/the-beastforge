@@ -45,7 +45,9 @@ class Skills extends Component {
 							</Form.Control>
 						</Col>
 						<Col>
-							<Form.Check type="checkbox" label="Proficient" id="proficient" onChange={this.props.onChange}/>
+							<Button variant={(this.props.skills.proficient) ? "success" : "danger"} id="proficient" onClick={this.props.onChange}>
+								{(this.props.skills.proficient) ? "Proficient" : "Not Proficient"}
+							</Button>
 						</Col>
 						<Col>
 							<Form.Control id="skill-bonus" type="number" step={1} value={this.props.skills.bonus} onChange={this.props.onChange} />
