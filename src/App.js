@@ -345,7 +345,7 @@ class App extends Component {
 			displayName: "Attack " + count,
 			type: "attack",
 			data: {
-				type: "",
+				type: "Melee Weapon",
 				toHit: 0,
 				bonus: 0,
 				target: "",
@@ -501,16 +501,7 @@ class App extends Component {
 	}
 
 	select = (trait) => {
-		this.resetAttackDropdowns();
 		this.setState({ selectedTrait: trait });
-	}
-
-	resetAttackDropdowns(trait) {
-		let form = document.getElementById("attack-stat");
-		if (form !== null) {
-			//console.log(form.value);
-			form.value = "No Stat";
-		}
 	}
 
 	addTrait(trait) {

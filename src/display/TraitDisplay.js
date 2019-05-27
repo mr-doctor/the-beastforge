@@ -10,6 +10,7 @@ import SpellAdder from '../inputs/SpellAdder';
 import SpellList from './SpellList';
 import MAX_NUMBER from '../App';
 import ManageDamage from '../inputs/ManageDamage';
+import Range from '../inputs/Range';
 
 class TraitDisplay extends Component {
 	render() {
@@ -135,16 +136,7 @@ class TraitDisplay extends Component {
 							<Form.Control value={trait.data.onHit} placeholder="On Hit" id="onHit" onChange={this.editTrait}></Form.Control>
 						</Col>
 					</Form.Row>
-					{/* <Form.Row style={{ marginBottom: "15px" }}>
-						<Col>
-							<Form.Control value={trait.data.onHit} placeholder="On Hit" id="onHit" onChange={this.editTrait}></Form.Control>
-						</Col>
-					</Form.Row>
-					<Form.Row>
-						<Col>
-							<Form.Control value={trait.data.onHit} placeholder="On Hit" id="onHit" onChange={this.editTrait}></Form.Control>
-						</Col>
-					</Form.Row> */}
+					<Range data={trait.data} onChange={this.editTraitZero}/>
 				</Form.Group>
 			</Form>
 		); 
@@ -234,25 +226,21 @@ class TraitDisplay extends Component {
 			stat = 10;
 		}
 		let dmg = this.calculate(trait.data.damageDieNum, trait.data.damageDieType, parseInt(stat), trait.data.damageBonus);
-		// trait.data.damage = dmg;
-		// this.props.editTrait(trait);
 		return dmg;
 	}
 
 	updateDamage = (e) => {
-		// if ("--ignore".localeCompare(e) !== 0) {
-			switch (e.target.id) {
-				case "damageDieNum":
-					this.editTraitZero(e);
-					break;
-				case "damageDieType":
-					this.onChangeDice(e);
-					break;
-				default:
-					this.editTrait(e);
-					break;
-			}
-		// }
+		switch (e.target.id) {
+			case "damageDieNum":
+				this.editTraitZero(e);
+				break;
+			case "damageDieType":
+				this.onChangeDice(e);
+				break;
+			default:
+				this.editTrait(e);
+				break;
+		}
 	}
 
 	calculate(dice, diceType, stat, bonus) {
