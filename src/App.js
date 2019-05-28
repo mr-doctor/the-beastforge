@@ -479,11 +479,12 @@ class App extends Component {
 			name: "Legendary Actions",
 			displayName: "Legendary Actions",
 			type: "legendary",
-			numActions: 3,
-			tempName: "",
-			tempDescription: "",
-			tempCost: 1,
 			data: {
+				numActions: 3,
+				tempName: "",
+				tempDescription: "",
+				selectedLegendary: null,
+				tempCost: 1,
 				actions: [],
 			},
 		});

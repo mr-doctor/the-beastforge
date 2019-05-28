@@ -11,6 +11,7 @@ import SpellList from './SpellList';
 import MAX_NUMBER from '../App';
 import ManageDamage from '../inputs/ManageDamage';
 import Range from '../inputs/Range';
+import LegendaryList from './LegendaryList';
 
 class TraitDisplay extends Component {
 	render() {
@@ -50,11 +51,54 @@ class TraitDisplay extends Component {
 		return (
 			<Form id="legendary-edit">
 				<Form.Group>
-					<Form.Row style={{marginBottom: "15px"}}>
-						<Form.Control value={trait.displayName} id="name" readOnly></Form.Control>
+					<Form.Row>
+						<Col>
+						</Col>
+						<Col>
+							Number of Actions
+						</Col>
 					</Form.Row>
-					<Form.Label>Description</Form.Label>
-					<Form.Control as="textarea" rows="3" style={{ maxHeight: "135px" }} value={trait.data} onChange={this.editTraitDescription} />
+					<Form.Row style={{ marginBottom: "15px" }}>
+						<Col>
+							<Form.Control value={trait.displayName} id="name" readOnly></Form.Control>
+						</Col>
+						<Col>
+							<Form.Control id="numActions" type="number" step={1} value={trait.data.numActions} onChange={this.editTraitZero} />
+						</Col>
+					</Form.Row>
+					<Form.Row>
+						<Col>
+						</Col>
+						<Col>
+							Cost
+						</Col>
+					</Form.Row>
+					<Form.Row style={{marginBottom: "15px"}}>
+						<Col>
+							<Form.Control value={trait.data.tempName} placeholder="Action Name" id="tempName" onChange={this.editLegendary}></Form.Control>
+						</Col>
+						<Col>
+							<Form.Control id="tempCost" type="number" step={1} value={trait.data.tempCost} onChange={this.editLegendaryCost} />
+						</Col>
+					</Form.Row>
+					<Form.Row style={{marginBottom: "15px"}}>
+						<Form.Label>Description</Form.Label>
+						<Form.Control 
+							as="textarea" 
+							rows="3" 
+							id="tempDescription" 
+							style={{ maxHeight: "135px" }} 
+							value={trait.data.tempDescription} 
+							onChange={this.editLegendary} />
+					</Form.Row>
+					<Form.Row style={{marginBottom: "15px"}}>
+						<Col>
+							<LegendaryList selected={trait.data.selectedLegendary} list={trait.data.actions} delete={this.deleteLegendary} select={this.selectLegendary}/>
+						</Col>
+						<Col>
+							<Button onClick={this.addLegendary}>Add</Button>
+						</Col>
+					</Form.Row>
 				</Form.Group>
 			</Form>
 		);
@@ -217,6 +261,88 @@ class TraitDisplay extends Component {
 				</Form.Row>
 			</Form>
 		);
+	}
+
+	editLegendary = (e) => {
+		let trait = this.props.trait;
+		if (trait.data.selectedLegendary !== null) {
+			if (e.target.id.includes("Description")) {
+				trait.data.selectedLegendary.description = e.target.value;
+			} else if (e.target.id.includes("Name")) {
+				trait.data.selectedLegendary.name = e.target.value;
+			}
+			this.props.editTrait(trait);
+		}
+
+		this.editTrait(e);
+	}
+
+	
+	editLegendaryCost = (e) => {
+		let trait = this.props.trait;
+		if (trait.data.selectedLegendary !== null) {
+			if (e.target.id.includes("Cost")) {
+				trait.data.selectedLegendary.cost = this.limitToMax(Math.max(0, parseInt(e.target.value)));
+			}
+			this.props.editTrait(trait);
+		}
+
+		this.editTraitZero(e);
+	}
+
+	selectLegendary = (legendary) => {
+
+		let trait = this.props.trait;
+
+		if (trait.data.selectedLegendary === legendary) {
+			trait.data.tempCost = 1;
+			trait.data.tempName = "";
+			trait.data.tempDescription = "";
+			trait.data.selectedLegendary = null;
+		} else {
+			trait.data.tempCost = legendary.cost;
+			trait.data.tempName = legendary.name;
+			trait.data.tempDescription = legendary.description;
+			trait.data.selectedLegendary = legendary;
+		}
+		this.props.editTrait(trait);
+	}
+
+	deleteLegendary = (name, cost) => {
+		for (let i = 0; i < this.props.trait.data.actions.length; i++) {
+			let legendary = this.props.trait.data.actions[i];
+
+			if (this.equals(legendary.name, name) && legendary.cost === cost) {
+				let trait = this.props.trait;
+
+				trait.data.actions.splice(trait.data.actions.indexOf(legendary), 1);
+				trait.data.tempName = "";
+				trait.data.tempDescription = "";
+				trait.data.tempCost = 0;
+				this.props.editTrait(trait);
+			}
+		}
+	}
+
+	addLegendary = () => {
+		if (this.props.trait.data.actions.length >= 32) {
+			return;
+		}
+		let trait = this.props.trait;
+		for (let i = 0; i < trait.data.actions.length; i++) {
+			if (this.equals(trait.data.actions[i].name, trait.data.tempName) && 
+				this.equals(trait.data.actions[i].description, trait.data.tempDescription) && 
+				trait.data.actions[i].cost === trait.data.tempCost) {
+				return;
+			}
+		}
+		trait.data.actions.push({
+			name: trait.data.tempName,
+			description: trait.data.tempDescription,
+			cost: trait.data.tempCost,
+		});
+
+		this.props.editTrait(trait);
 	}
 
 	calculateDamage() {
