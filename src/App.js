@@ -25,6 +25,7 @@ import Col from 'react-bootstrap/Col';
 import Saver from './manage/Saver';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import MonsterList from './display/MonsterList';
+import Login from './manage/Login';
 
 export const MAX_NUMBER = 4096;
 
@@ -170,6 +171,9 @@ class App extends Component {
 										Load
 									</Button>
 								</Link>
+							</Col>
+							<Col style={{display: "flex"}}>
+								<Login/>
 							</Col>
 						</Form.Row>
 						<CardGroup>

@@ -48,6 +48,7 @@ class Saver extends Component {
 				'Accept': 'application/json',
 				'Content-Type': 'application/json',
 			},
+			credentials: 'include',
 			body: JSON.stringify(this.props.monster)
 		})
 		.then(res => res.json())
