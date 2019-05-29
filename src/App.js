@@ -28,6 +28,8 @@ import MonsterList from './display/MonsterList';
 import Login from './manage/Login';
 
 export const MAX_NUMBER = 4096;
+export const API = "https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod";
+// export const API = "http://127.0.0.1:5000";
 
 class App extends Component {
 

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
 import { Link } from 'react-router-dom';
+import { API } from '../App';
 
 class MonsterList extends Component {
 	constructor(props) {
 		super(props);
-		let api = 'https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod';
-		//api = "http://127.0.0.1:5000";
 
 		this.state = { monsters: [] };
-		fetch(api + '/list_monsters', {credentials: 'include'}).then(res => res.json())
+		fetch(API + '/list_monsters', {credentials: 'include'}).then(res => res.json())
 			.then(
 				(result) => {
 					this.setState({ monsters: result.monsters })

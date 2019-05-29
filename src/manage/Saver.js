@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import Overlay from 'react-bootstrap/Overlay';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { API } from '../App';
 
 class Saver extends Component {
-	api = "https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod";
-	// api = "http://127.0.0.1:5000"
 
 	constructor(...args) {
 		super(...args);
@@ -42,7 +41,7 @@ class Saver extends Component {
 
 	save = () => {
 		
-		fetch(this.api + '/save_monster', {
+		fetch(API + '/save_monster', {
 			method: 'POST',
 			headers: {
 				'Accept': 'application/json',

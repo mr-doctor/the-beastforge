@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
+import { API } from '../App'
 
 class Saver extends Component {
-	api = "https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod";
-	// api = "http://127.0.0.1:5000"
 
 	render() {
 		return (
@@ -16,7 +15,8 @@ class Saver extends Component {
 	}
 
 	login = () => {
-		window.location = this.api + '/login?redirect=' + window.location.href
+		console.log("API", API);
+		window.location = API + '/login?redirect=' + window.location.href
 	}
 }
 
