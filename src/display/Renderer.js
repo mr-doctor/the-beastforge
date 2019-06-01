@@ -3,7 +3,6 @@ import "../App.css";
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
-import print from 'print-js';
 import html2canvas from 'html2canvas';
 
 class Renderer extends Component {
