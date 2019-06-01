@@ -394,7 +394,7 @@ class App extends Component {
 		}
 		toHit += (this.state.selectedTrait.data.proficient) ? this.state.proficiency : 0;
 		toHit += parseInt(this.state.selectedTrait.data.bonus);
-
+ 
 		return toHit;
 	}
 
