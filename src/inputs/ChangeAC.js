@@ -14,7 +14,7 @@ class ChangeAC extends Component {
 						<Form.Control id={this.props.id} type="number" step={1} value={this.props.AC} onChange={this.props.onChange}/>
 					</Col>
 					<Col>
-						<Form.Control type="text" placeholder="Armour Type" onChange={this.props.onChangeDescription}/>
+						<Form.Control type="text" id="ACDescription" placeholder="Armour Type" onChange={this.props.onChangeDescription}/>
 					</Col>
 				</Form.Row>
 			</Form.Group>

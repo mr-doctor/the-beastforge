@@ -26,6 +26,7 @@ import Saver from './manage/Saver';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import MonsterList from './display/MonsterList';
 import Login from './manage/Login';
+import Renderer from './display/Renderer';
 
 export const MAX_NUMBER = 4096;
 export const API = "https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod";
@@ -41,12 +42,12 @@ class App extends Component {
 
 		this.state = {
 			monsterName: "",
-			alignment: "",
-			gender: "",
-			size: "",
-			type: "",
+			alignment: "Any alignment",
+			gender: "Male",
+			size: "Medium",
+			type: "Aberration",
 			customType: "",
-			AC: 0,
+			AC: 10,
 			ACDescription: "",
 			HPDice: 0,
 			HPDiceType: 4,
@@ -71,10 +72,10 @@ class App extends Component {
 			},
 			speeds: {
 				walk: 30,
-				swim: 0,
-				fly: 0,
-				climb: 0,
 				burrow: 0,
+				climb: 0,
+				fly: 0,
+				swim: 0,
 				hover: false,
 			},
 			senses: {
@@ -188,7 +189,7 @@ class App extends Component {
 
 								<AlignmentSelect id="alignment-select" value={this.state.alignment} onChange={this.changeAlignment} />
 
-								<ChangeAC id="changeAC" AC={this.state.AC} onChange={this.changeAC} />
+								<ChangeAC id="changeAC" AC={this.state.AC} onChange={this.changeAC} onChangeDescription={this.editAspect}/>
 
 								<ManageHP
 									HPDice={this.state.HPDice}
@@ -245,7 +246,7 @@ class App extends Component {
 								<Senses senses={this.state.senses}
 									changeBlindBeyond={this.changeBlindBeyond}
 									changeSenseType={this.changeSenseType}
-									displayCustom=	{this.equals("Custom Type", this.state.senses.senseType)}
+									displayCustom={this.equals("Custom Type", this.state.senses.senseType)}
 									changeSenseDistance={this.changeSenseDistance}
 									addSense={this.addSense}
 									/>
@@ -288,10 +289,10 @@ class App extends Component {
 							editTrait={this.editTrait}/>
 						
 						<Card className="h-100">
-							
+						<Renderer monster={this.state}></Renderer>
 							
 						</Card>
-
+							
 						</Card>
 				</CardGroup>
 			</div>
@@ -300,6 +301,17 @@ class App extends Component {
 
 	debugButton = () => {
 		console.log(this.state.selectedTrait.data);
+	}
+
+	editAspect = (e) => {
+		let id = e.target.id;
+		let value = e.target.value;
+
+		let state = this.state;
+
+		state[id] = (!isNaN(parseInt(value))) ? this.limitToMax(parseInt(value)) : value;
+
+		this.setState(state);
 	}
 
 	calculateToHit() {
@@ -313,11 +325,6 @@ class App extends Component {
 		toHit += (this.state.selectedTrait.data.proficient) ? this.state.proficiency : 0;
 		toHit += parseInt(this.state.selectedTrait.data.bonus);
 
-		// let selectedTraitTemp = this.state.selectedTrait;
-
-		// selectedTraitTemp.data.toHit = toHit;
-
-		// this.setState({selectedTrait: selectedTraitTemp})
 		return toHit;
 	}
 
@@ -354,12 +361,12 @@ class App extends Component {
 				type: "Melee Weapon",
 				toHit: 0,
 				bonus: 0,
-				target: "",
+				target: "One Target",
 				targetSize: 0,
 				targetNum: 0,
 				proficient: false,
 				damageDieNum: 0,
-				damageDieType: 0,
+				damageDieType: 4,
 				damageBonus: 0,
 				damageType: "",
 				damage: 0,
@@ -417,7 +424,7 @@ class App extends Component {
 			name: "Multiattack",
 			displayName: "Multiattack",
 			type: "multiattack",
-			data: "",
+			data: "The " + ((this.state.monsterName.length === 0) ? "creature" : this.state.monsterName) + " makes 1 attack.",
 			edited: false,
 		});
 	}
@@ -563,7 +570,7 @@ class App extends Component {
 		this.addTrait({
 			name: this.state.condition,
 			displayName: this.state.condition,
-			type: "immunity",
+			type: "immunity--con",
 		});
 	}
 
@@ -611,16 +618,19 @@ class App extends Component {
 	changeSkill = (e) => {
 		let skillTemp = { ...this.state.skills }
 
-		let skillStrSplit = document.getElementById("skill-select").value.split(" ");
+		let str = document.getElementById("skill-select").value;
 
-		let stat = skillStrSplit[1].replace(/[()]/g, '').toLowerCase();
+		let skillStrSplit = str.slice(str.length - 4, str.length - 1);
+		console.log(skillStrSplit)
+
+		let stat = skillStrSplit.replace(/[()]/g, '').toLowerCase();
 
 		let isProf = skillTemp.proficient;
 		if (this.equals(e.target.id, "proficient")) {
 			isProf = !skillTemp.proficient;
 		}
  
-		let skillName = skillStrSplit[0];
+		let skillName = str.split("(")[0];
 
 		let bonus = parseInt(document.getElementById("skill-bonus").value);
 		if (bonus < -MAX_NUMBER || bonus > MAX_NUMBER) {
@@ -714,7 +724,7 @@ class App extends Component {
 	}
 
 	changeAS = (e) => {
-		if (e.target.value < 0 || e.target.value > MAX_NUMBER) {
+		if (e.target.value < 0 || e.target.value > 900) {
 			return;
 		}
 		let scoresTemp = { ...this.state.abilityScores }

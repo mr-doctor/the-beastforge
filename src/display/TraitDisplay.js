@@ -106,7 +106,7 @@ class TraitDisplay extends Component {
 
 	showBasicEditField(trait, type) {
 		if (this.equals(type, "multiattack") && !trait.edited) {
-			trait.data = "The " + (this.props.monsterName.length === 0) ? "creature" : this.props.monsterName + " makes 1 attack.";
+			trait.data = "The " + ((this.props.monsterName.length === 0) ? "creature" : this.props.monsterName) + " makes 1 attack.";
 			trait.edited = true;
 		}
 
@@ -145,8 +145,8 @@ class TraitDisplay extends Component {
 						</Col>
 						<Col>
 							<Form.Control id="target" as="select" onChange={this.editTrait} value={trait.data.target}>
-								<option>Single Target</option>
-								<option>Single Creature</option>
+								<option>One Target</option>
+								<option>One Creature</option>
 								<option>Multiple Creatures</option>
 								<option>Multiple Targets</option>
 								{/* <option>Shape</option> */}
@@ -355,6 +355,10 @@ class TraitDisplay extends Component {
 		return dmg;
 	}
 
+	calculate(dice, diceType, stat, bonus) {
+		return Math.floor(((diceType + 1.0) / 2.0) * dice + this.calculateMod(stat)) + bonus;
+	}
+
 	updateDamage = (e) => {
 		switch (e.target.id) {
 			case "damageDieNum":
@@ -367,10 +371,6 @@ class TraitDisplay extends Component {
 				this.editTrait(e);
 				break;
 		}
-	}
-
-	calculate(dice, diceType, stat, bonus) {
-		return Math.floor(((diceType + 1.0) / 2.0) * dice + this.calculateMod(stat)) + bonus;
 	}
 
 	calculateMod(score) {

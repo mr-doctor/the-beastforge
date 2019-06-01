@@ -12,6 +12,7 @@ class TraitList extends Component {
 		"legendary": "warning",
 		"sense": "secondary",
 		"immunity": "success",
+		"immunity--con": "success",
 		"resistance": "success",
 		"vulnerability": "success",
 		"language": "dark",
@@ -21,7 +22,7 @@ class TraitList extends Component {
 		return (
 			<ListGroup className="list-group">
 				{this.props.list.map((trait) => {
-					let capitalisedType = trait.type.charAt(0).toUpperCase() + trait.type.slice(1);
+					let capitalisedType = (trait.type.charAt(0).toUpperCase() + trait.type.slice(1)).replace("--con", "");
 					return (
 						<ListGroup.Item variant={this.colours[trait.type]} style={(this.equals(trait.type, "skill")) ? {backgroundColor: "#d791ff"} : {}}
 										action key={trait.name} onClick={() => this.props.select(trait)}>
