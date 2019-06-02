@@ -43,16 +43,26 @@ const crXPMap = {
 }
 
 class Renderer extends Component {
+
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			dividerDirection: "tapered-divider",
+		}
+	}
+
 	print = () => {
+		window.scrollTo(0, 0);
 		html2canvas(document.querySelector("#rendered")).then(canvas => {
 			// canvas.height="1000px"
 			// canvas.width="1000px"
-			  var img = canvas.toDataURL()
-			  var link = document.createElement("a");
-			  link.setAttribute("href", img);
-			  link.setAttribute("download", this.props.monster.monsterName);
-			  link.click();
-		  });
+			var img = canvas.toDataURL()
+			var link = document.createElement("a");
+			link.setAttribute("href", img);
+			link.setAttribute("download", this.props.monster.monsterName);
+			link.click();
+		});
 	}
 
 	render() {
@@ -102,13 +112,13 @@ class Renderer extends Component {
 					</h3>
 					<i style={{ color: "black" }}>{monster.size} {this.monsterType(monster)}, {monster.alignment.toLowerCase()}</i>
 
-					<div className="tapered-divider" />
+					<div className={this.state.dividerDirection} />
 
 					<span><b>Armor Class </b>{monster.AC}{this.monsterACDesc(monster)}</span>
 					<span><b>Hit Points </b>{monster.HPFormat}</span>
 					<span><b>Speed </b>{this.speeds(monster)}</span>
 
-					<div className="tapered-divider" />
+					<div className={this.state.dividerDirection} />
 
 					<div className="scores">
 						<Col style={{ textAlign: "center", padding: "0px", whiteSpace: "nowrap" }}>
@@ -143,7 +153,7 @@ class Renderer extends Component {
 						</Col>
 					</div>
 
-					<div className="tapered-divider"/>
+					<div className={this.state.dividerDirection}/>
 
 					{this.senses(monster)}
 					{this.simpleTrait(monster, "skill", "Skills")}
@@ -153,7 +163,7 @@ class Renderer extends Component {
 					{this.simpleTrait(monster, "immunity--con", "Condition Immunities")}
 					{this.simpleTrait(monster, "language", "Languages")}
 					<span><b>Challenge </b>{monster.CR} ({crXPMap[monster.CR + ""]} XP)</span>
-					<div className="tapered-divider" />
+					<div className={this.state.dividerDirection} />
 
 					{this.mainTrait(monster, "ability")}
 					{this.mainTrait(monster, "spellcasting")}

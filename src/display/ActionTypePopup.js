@@ -25,6 +25,7 @@ class ActionTypePopup extends Component {
 			<div>
 				<Button variant="outline-danger" onClick={this.handleClick} style={{borderRadius: "0px", width: "150px", marginTop: "10px"}}>Add Action</Button>
 				<Overlay
+					rootClose={true}
 					show={this.state.show} 	
 					target={this.state.target}
 					placement="top"

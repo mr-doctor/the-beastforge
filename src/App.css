@@ -122,6 +122,16 @@
 	margin-bottom: 7px;
  }
 
+ .tapered-divider-right {
+	width: 0;
+	height: 0;
+	border-top: 2px solid transparent;
+	border-right: 360px solid #90291c;
+	border-bottom: 2px solid transparent;
+	margin-top: 7px;
+	margin-bottom: 7px;
+ }
+
  .information {
 	 color: "#000000"
  }
@@ -140,5 +150,5 @@
 .divider {
 	margin-top: 0px;
 	margin-bottom: 5px;
-	border-top: 2px solid #90291c;
+	border-top: 1px solid #90291c;
 }

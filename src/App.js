@@ -40,7 +40,12 @@ class App extends Component {
 
 		this.prevPathName = window.location.pathname;
 
-		this.state = {
+		this.state = this.newState()
+		this.update();
+	}
+
+	newState() {
+		return {
 			monsterName: "",
 			alignment: "Any alignment",
 			gender: "Male",
@@ -113,7 +118,6 @@ class App extends Component {
 			traits: [],
 			abilities: [],
 		};
-		this.update();
 	}
 
 	update() {
@@ -165,6 +169,11 @@ class App extends Component {
 						<Form.Row>
 							<Col style={{display: "flex", flexGrow: 10}}>
 								<Form.Control type="text" placeholder="Monster Name" value={this.state.monsterName} style={{textAlign: "center"}} onChange={this.changeName}/>
+							</Col>
+							<Col style={{display: "flex"}}>
+								<Button onClick={() => this.setState(this.newState())}>
+									New
+								</Button>
 							</Col>
 							<Col style={{display: "flex"}}>
 								<Saver monster={this.state}/>
