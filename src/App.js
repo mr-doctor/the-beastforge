@@ -207,7 +207,7 @@ class App extends Component {
 										Challenge Rating
 									</Col>
 									<Col>
-										<Form.Control id="CR" as="select" value={this.state.CR} onChange={this.editAspect}>
+										<Form.Control id="CR" as="select" value={this.state.CR} onChange={this.editAspectStr}>
 											<option>0</option>
 											<option>1/8</option>
 											<option>1/4</option>
@@ -369,6 +369,18 @@ class App extends Component {
 		let state = this.state;
 
 		state[id] = (!isNaN(parseInt(value))) ? this.limitToMax(parseInt(value)) : value;
+
+		this.setState(state);
+	}
+
+	
+	editAspectStr = (e) => {
+		let id = e.target.id;
+		let value = e.target.value;
+
+		let state = this.state;
+		
+		state[id] = value;
 
 		this.setState(state);
 	}
@@ -751,7 +763,7 @@ class App extends Component {
 		this.setState({ senses: senseTemp })
 		this.addTrait({
 			name: newSense.name,
-			displayName: (newSense.name + " " + newSense.distance + "ft" + ((newSense.blindBeyond) ? " (Blind beyond)" : "")),
+			displayName: (newSense.name + " " + newSense.distance + "ft." + ((newSense.blindBeyond) ? " (blind beyond this radius)" : "")),
 			type: "sense",
 		});
 	}

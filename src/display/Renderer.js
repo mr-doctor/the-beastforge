@@ -45,8 +45,9 @@ const crXPMap = {
 class Renderer extends Component {
 	print = () => {
 		html2canvas(document.querySelector("#rendered")).then(canvas => {
+			// canvas.height="1000px"
+			// canvas.width="1000px"
 			  var img = canvas.toDataURL()
-			  console.log(img);
 			  var link = document.createElement("a");
 			  link.setAttribute("href", img);
 			  link.setAttribute("download", this.props.monster.monsterName);
@@ -120,6 +121,7 @@ class Renderer extends Component {
 
 					<div className="tapered-divider"/>
 
+					{this.senses(monster)}
 					{this.simpleTrait(monster, "skill", "Skills")}
 					{this.simpleTrait(monster, "vulnerability", "Damage Vulnerabilities")}
 					{this.simpleTrait(monster, "resistance", "Damage Resistances")}
@@ -148,6 +150,43 @@ class Renderer extends Component {
 					{this.mainTrait(monster, "reaction")}
 				</Card>
 			</div>)
+	}
+
+	senses(monster) {
+		let str = "";
+
+		let senses = monster.traits;
+
+		senses.sort(function(a, b){
+			let aStr = a.name;
+			let bStr = b.name;
+			return aStr.localeCompare(bStr);
+		});
+
+		for (let i = 0; i < senses.length; i++) {
+			let a = senses[i];
+			if (this.equals(a.type, "sense")) {
+				str += a.displayName + ", ";
+			}
+		}
+		
+		str += "passive Perception " + this.passivePerception(monster);
+
+		return (<span><b>Senses </b>{str}</span>);
+	}
+
+	passivePerception(monster) {
+		let val = 8;
+		for (let i = 0; i < monster.skills.skillList.length; i++) {
+			let skill = monster.skills.skillList[i];
+			console.log(skill);
+			if (this.equals(skill.skill, "Perception ")) {
+				val += skill.bonus;
+				val += (skill.proficient) ? monster.proficiency : 0;
+			}
+		}
+		val += this.calculateMod(monster.abilityScores.wis);
+		return val;
 	}
 
 	mainTrait(monster, type) {
@@ -271,6 +310,12 @@ class Renderer extends Component {
 
 		let traits = monster.traits;
 
+		traits.sort(function (a, b) {
+			let aStr = a.displayName;
+			let bStr = b.displayName;
+			return aStr.localeCompare(bStr);
+		});
+		
 		for (let i = 0; i < traits.length; i++) {
 			if (this.equals(type, traits[i].type)) {
 				str += traits[i].displayName;
