@@ -57,6 +57,30 @@ class Renderer extends Component {
 
 	render() {
 		let monster = this.props.monster;
+		let display = {
+			actions: false,
+			reactions: false,
+			legendary: false,
+		}
+		for (let i = 0; i < monster.traits.length; i++) {
+			console.log(monster.traits[i].type);
+			switch(monster.traits[i].type) {
+				case "action":
+				case "attack":
+				case "multiattack":
+					display.actions = true;
+					break;
+				case "reaction":
+					display.reactions = true;
+					break;
+				case "legendary":
+					display.legendary = true;
+					break;
+				default:
+					break;
+			}
+		}
+		console.log(display);
 		return (
 			<div style={{ color: "#90291c" }}>
 				<Button onClick={this.print}>
@@ -129,27 +153,36 @@ class Renderer extends Component {
 					{this.simpleTrait(monster, "immunity--con", "Condition Immunities")}
 					{this.simpleTrait(monster, "language", "Languages")}
 					<span><b>Challenge </b>{monster.CR} ({crXPMap[monster.CR + ""]} XP)</span>
-					<div className="tapered-divider"/>
+					<div className="tapered-divider" />
 
 					{this.mainTrait(monster, "ability")}
 
-					<h3 style={{fontSize: "21px", fontVariant: "small-caps"}}>
-						Actions
-					</h3>
-					<hr className="divider"/>
+					{this.displayDivider(display, "Actions")}
+					
 
 					{this.mainTrait(monster, "action")}
 					{this.mainTrait(monster, "attack")}
 					{this.mainTrait(monster, "multiattack")}
 
-					<h3 style={{fontSize: "21px", fontVariant: "small-caps"}}>
-						Reactions
-					</h3>
-					<hr className="divider"/>
-
+					{this.displayDivider(display, "Reactions")}
+					
 					{this.mainTrait(monster, "reaction")}
 				</Card>
 			</div>)
+	}
+
+	displayDivider(display, type) {
+		if (display[type.toLowerCase()]) {
+			return (
+				<>
+					<h3 style={{ fontSize: "21px", fontVariant: "small-caps" }}>
+						{type}
+					</h3>
+					<hr className="divider" />
+				</>
+			);
+		}
+		return (<></>);
 	}
 
 	senses(monster) {
@@ -315,7 +348,7 @@ class Renderer extends Component {
 			let bStr = b.displayName;
 			return aStr.localeCompare(bStr);
 		});
-		
+
 		for (let i = 0; i < traits.length; i++) {
 			if (this.equals(type, traits[i].type)) {
 				str += traits[i].displayName;

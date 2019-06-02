@@ -44,7 +44,6 @@ class ActionTypePopup extends Component {
 	}
 
 	toggleShow() {
-		console.log("hey")
 		this.setState({show: false});
 	}
 
