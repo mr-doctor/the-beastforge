@@ -156,9 +156,9 @@ class Renderer extends Component {
 					<div className="tapered-divider" />
 
 					{this.mainTrait(monster, "ability")}
+					{this.mainTrait(monster, "spellcasting")}
 
 					{this.displayDivider(display, "Actions")}
-					
 
 					{this.mainTrait(monster, "action")}
 					{this.mainTrait(monster, "attack")}
@@ -167,12 +167,58 @@ class Renderer extends Component {
 					{this.displayDivider(display, "Reactions")}
 					
 					{this.mainTrait(monster, "reaction")}
+
+					{this.displayDivider(display, "Legendary Actions")}
+
+					{this.displayLegendary(monster)}
+
 				</Card>
 			</div>)
 	}
 
+	displayLegendary(monster) {
+		let traits = monster.traits;
+
+		let legendary = undefined;
+
+		for (let i = 0; i < traits.length; i++) {
+			if (this.equals("legendary", traits[i].type)) {
+				legendary = traits[i];
+			}
+		}
+		if (legendary === undefined) {
+			return(<></>);
+		}
+
+		let preamble = "The creature can take " + legendary.data.numActions + " legendary actions, choosing from the options below. " +
+		"Only one legendary action option can be used at a time and only at the end of another creature's turn. The creature regains " +
+		"spend legendary actions at the start of its turn.";
+
+		legendary.data.actions.sort(function(a, b) {
+			return a.cost - b.cost;
+		});
+
+		return (
+			<>
+				<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "10px" }}>{preamble}</p>
+				{legendary.data.actions.map((action) => {
+					return (
+						<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "10px" }}>
+						<b>{action.name + " (Costs " + action.cost + " Action" + ((action.cost !== 1) ? "s" : "") + "). "}</b>
+						{action.description}
+						</p>
+					);
+				})
+				}
+			</>)
+	}
+
 	displayDivider(display, type) {
-		if (display[type.toLowerCase()]) {
+		let type2 = type;
+		if (this.equals(type, "Legendary Actions")) {
+			type2 = "legendary";
+		}
+		if (display[type2.toLowerCase()]) {
 			return (
 				<>
 					<h3 style={{ fontSize: "21px", fontVariant: "small-caps" }}>
@@ -212,7 +258,6 @@ class Renderer extends Component {
 		let val = 8;
 		for (let i = 0; i < monster.skills.skillList.length; i++) {
 			let skill = monster.skills.skillList[i];
-			console.log(skill);
 			if (this.equals(skill.skill, "Perception ")) {
 				val += skill.bonus;
 				val += (skill.proficient) ? monster.proficiency : 0;
@@ -243,25 +288,38 @@ class Renderer extends Component {
 						case "multiattack":
 						case "reaction":
 							return (
-								<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "0px" }}>
+								<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "10px" }}>
 									<b><i>{trait.displayName}. </i></b>
 									{trait.data}
 								</p>
 							)
 						case "attack":
 							return (
-								<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "0px"}}>
+								<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "10px" }}>
 									<b><i>{trait.displayName}. </i></b>
 									<i>{trait.data.type} Attack: </i>
 									{this.formatVal(this.calculateToHit(monster, trait))} to hit,
-								{this.renderRange(monster, trait)},
-								{" " + this.doTarget(monster, trait)}.
-								<i> Hit: </i>
+									{this.renderRange(monster, trait)},
+									{" " + this.doTarget(monster, trait)}.
+									<i> Hit: </i>
 									{this.calculateDamage(monster, trait) + " "}
 									({this.formatDamage(monster, trait)}).
-								{" " + trait.data.onHit}
+									{" " + trait.data.onHit}
 								</p>
 							)
+						case "spellcasting":
+								return (
+									<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "10px" }}>
+										<b><i>{trait.name}. </i></b>
+										{"The creature is a " + trait.data.level + this.numberSuffix(trait.data.level) + "-level " + 
+										"spellcaster. Its spellcasting ability is " + trait.data.ability + " (spell save DC " + 
+										this.calculateSpellDC(monster, trait) + ", " + this.formatVal(this.calculateSpellToHit(monster, trait)) + 
+										" to hit with spell attacks). The creature has the following " + trait.data.list.toLowerCase() + 
+										" spells prepared:"}
+										{this.formatSpells(monster, trait)}
+
+									</p>
+								)
 						default:
 							return (<></>);
 					}
@@ -269,6 +327,93 @@ class Renderer extends Component {
 				}
 			</>
 		)
+	}
+
+	formatSpells(monster, trait) {
+		let spells = trait.data.spells;
+
+		let spellsBreakdown = [
+			[],[],[],[],[],[],[],[],[],[]
+		];
+
+		for (let i = 0; i < spells.length; i++) {
+			let spell = spells[i];
+			spellsBreakdown[spell.level].push(spell);
+		}
+		console.log(spellsBreakdown)
+
+		return (
+			<>
+				{spellsBreakdown.map((spellList) => {
+					return (
+						<p style={{ textIndent: "5px", color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "0px" }}>
+							{this.formatSpellLevel(trait, spellsBreakdown.indexOf(spellList))}
+						</p>
+					)
+				})}
+			</>
+		)
+	}
+
+	formatSpellLevel(trait, level) {
+		let str = "";
+
+		let spells = trait.data.spells;
+		if (level === 0) {
+			str = "Cantrips (at will): ";
+		} else {
+			str += level + this.numberSuffix(level) + " level (" + trait.data.slots[level + ""] + " slot" + ((trait.data.slots[level + ""] === 1) ? "" : "s") + "): ";
+		}
+		spells = spells.filter(spell => spell.level === level);
+		if (trait.data.slots[level + ""] === 0 || (level === 0 && spells.length === 0)) {
+			return (<></>);
+		}
+		spells.sort(function (a, b) {
+			let aStr = a.name;
+			let bStr = b.name;
+			return aStr.localeCompare(bStr);
+		});
+
+		return (
+		<>{str}
+			{spells.map((spell) => {
+				return (
+					<span>
+						<i>{spell.name}</i>{((spells.indexOf(spell) === spells.length - 1) ? "" : ", ")}
+					</span>
+				)
+			})}
+		</>);
+
+	}
+
+	calculateSpellDC(monster, trait) {
+		let val = 8;
+		val += this.calculateSpellToHit(monster, trait);
+
+		return val;
+	}
+
+	calculateSpellToHit(monster, trait) {
+		let val = 0;
+		val += this.calculateMod(monster.abilityScores[trait.data.ability.slice(0, 3).toLowerCase()]);
+		val += monster.proficiency;
+
+		return val;
+	}
+
+	numberSuffix(num) {
+		num = num + "";
+		switch(num.charAt(num.length - 1)) {
+			case "1":
+				return "st";
+			case "2":
+				return "nd";
+			case "3":
+				return "rd";
+			default:
+				return "th";
+		}
 	}
 
 	doTarget(monster, trait) {

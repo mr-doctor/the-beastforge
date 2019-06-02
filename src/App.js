@@ -538,14 +538,14 @@ class App extends Component {
 		}
 		this.addTrait({
 			name: "Spellcasting",
-			displayName: "Spellcasting",
+			displayName: "Bard Spellcasting",
 			type: "spellcasting",
 			data: {
-				list: "",
+				list: "Bard",
 				ability: "Intelligence",
 				level: 0,
 				innate: false,
-				spellLevel: 1,
+				spellLevel: 0,
 				spellName: "",
 				selectedSpell: null,
 				slots: {

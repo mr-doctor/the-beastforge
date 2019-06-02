@@ -504,7 +504,8 @@ class TraitDisplay extends Component {
 
 		let trait = this.props.trait;
 
-		trait.name = e.target.value + " Spellcasting";
+		// trait.name = e.target.value + " Spellcasting";
+		trait.data.list = e.target.value;
 		trait.displayName = e.target.value + " Spellcasting";
 		
 		this.props.editTrait(trait);
