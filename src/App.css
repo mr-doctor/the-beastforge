@@ -132,6 +132,56 @@
 	margin-bottom: 7px;
  }
 
+ .triangle2 {
+	width: 0;
+	height: 0;
+	background-color: 'transparent';
+	border-style: 'solid';
+	border-left-width: 50;
+	border-right-width: 50;
+	border-bottom-width: 100;
+	border-left-color: 'transparent';
+	border-right-color: 'transparent';
+	border-bottom-color: 'red'
+ }
+
+ .rotate90 {
+	transform-origin: 90px 110px;
+	transform: rotate(90deg);
+ }
+
+ .rotation-wrapper-outer {
+	/* display: table; */
+	height: 3px;
+	width: 380px;
+	margin: auto;
+	max-height:3px;
+	max-width: 380px;
+  }
+  .rotation-wrapper-inner {
+	padding: 50% 0;
+	height: 0;
+  }
+  .element-to-rotate {
+	display: block;
+	transform-origin: top left;
+	/* Note: for a CLOCKWISE rotation, use the commented-out
+	   transform instead of this one. */
+	/* transform: rotate(-90deg) translate(-100%); */
+	transform: rotate(90deg) translate(0, -100%);
+	margin-top: -50%;
+  
+	/* Not vital, but possibly a good idea if the element you're rotating contains
+	   text and you want a single long vertical line of text and the pre-rotation
+	   width of your element is small enough that the text wraps: */
+	white-space: nowrap;
+	height: 3px;
+	width: 360px;
+	margin: auto;
+	max-height: 3px;
+	max-width: 380px;
+  }
+
  .information {
 	 color: "#000000"
  }

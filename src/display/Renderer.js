@@ -4,6 +4,8 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import html2canvas from 'html2canvas';
+import { Triangle } from 'react-shapes';
+import TriangleDivider from './TriangleDivider';
 
 const crXPMap = {
 	"0": "10",
@@ -113,14 +115,14 @@ class Renderer extends Component {
 					<i style={{ color: "black" }}>{monster.size} {this.monsterType(monster)}, {monster.alignment.toLowerCase()}</i>
 
 					<div className={this.state.dividerDirection} />
-
+					
 					<span><b>Armor Class </b>{monster.AC}{this.monsterACDesc(monster)}</span>
 					<span><b>Hit Points </b>{monster.HPFormat}</span>
 					<span><b>Speed </b>{this.speeds(monster)}</span>
 
 					<div className={this.state.dividerDirection} />
 
-					<div className="scores">
+					<div className="scores"> 
 						<Col style={{ textAlign: "center", padding: "0px", whiteSpace: "nowrap" }}>
 							<b>STR</b>
 							<br></br>
@@ -153,7 +155,7 @@ class Renderer extends Component {
 						</Col>
 					</div>
 
-					<div className={this.state.dividerDirection}/>
+					<div className={this.state.dividerDirection} />
 
 					{this.senses(monster)}
 					{this.simpleTrait(monster, "skill", "Skills")}
@@ -163,6 +165,7 @@ class Renderer extends Component {
 					{this.simpleTrait(monster, "immunity--con", "Condition Immunities")}
 					{this.simpleTrait(monster, "language", "Languages")}
 					<span><b>Challenge </b>{monster.CR} ({crXPMap[monster.CR + ""]} XP)</span>
+					
 					<div className={this.state.dividerDirection} />
 
 					{this.mainTrait(monster, "ability")}
