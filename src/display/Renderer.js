@@ -4,8 +4,6 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import html2canvas from 'html2canvas';
-import { Triangle } from 'react-shapes';
-import TriangleDivider from './TriangleDivider';
 
 const crXPMap = {
 	"0": "10",
@@ -158,6 +156,7 @@ class Renderer extends Component {
 					<div className={this.state.dividerDirection} />
 
 					{this.senses(monster)}
+					{this.displaySaves(monster)}
 					{this.simpleTrait(monster, "skill", "Skills")}
 					{this.simpleTrait(monster, "vulnerability", "Damage Vulnerabilities")}
 					{this.simpleTrait(monster, "resistance", "Damage Resistances")}
@@ -187,6 +186,41 @@ class Renderer extends Component {
 
 				</Card>
 			</div>)
+	}
+
+	parseInt(val) {
+		let int = parseInt(val);
+		if (isNaN(int)) {
+			return 0;
+		}
+		return int;
+	}
+
+	displaySaves(monster) {
+		let as = ["str", "dex", "con", "int", "wis", "cha"];
+
+		let str = "";
+
+		let count = 0;
+		for (let i = 0; i < 6; i++) {
+			if (parseInt(monster.savingThrows[as[i]]) === 0) {
+				count++;
+				continue;
+			}
+			str += this.formatSave(monster, as[i]) + ((i !== 5) ? ", " : "");
+		}
+		if (count !== 6) {
+			return (<span><b>Saving Throws </b>{str}</span>);
+		}
+		return (<></>);
+	}
+
+	formatSave(monster, stat) {
+		return this.capitalise(stat) + " " + this.formatVal(this.parseInt(this.calculateMod(monster.abilityScores[stat])) + this.parseInt(monster.savingThrows[stat]));
+	}
+
+	capitalise(str) {
+		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 
 	displayLegendary(monster) {

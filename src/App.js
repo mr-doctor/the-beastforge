@@ -277,7 +277,7 @@ class App extends Component {
 
 								<h5>Saving Throws</h5>
 
-								<SavingThrows savingThrows={this.state.savingThrows} onChange={this.changeSv} />
+								<SavingThrows savingThrows={this.state.savingThrows} abilityScores={this.state.abilityScores} onChange={this.changeSv} />
 
 							</Card>
 							<Card className="col-md-4">
@@ -808,9 +808,15 @@ class App extends Component {
 		if (e.target.value < -MAX_NUMBER  || e.target.value > MAX_NUMBER) {
 			return;
 		}
+		
 
 		let scoresTemp = { ...this.state.savingThrows }
-		scoresTemp[e.target.id] = e.target.value;
+		let val = e.target.value;
+
+		if (isNaN(parseInt(val))) {
+			val = 0;
+		}
+		scoresTemp[e.target.id] = val;
 		this.setState({ savingThrows: scoresTemp });
 	}
 
@@ -819,6 +825,7 @@ class App extends Component {
 			return;
 		}
 		let scoresTemp = { ...this.state.abilityScores }
+
 		scoresTemp[e.target.id] = e.target.value;
 
 		this.setState({ abilityScores: scoresTemp });

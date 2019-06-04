@@ -47,9 +47,51 @@ class SavingThrows extends Component {
 							<Form.Control id="cha" type="number" step={1} value={this.props.savingThrows.cha} onChange={this.props.onChange} />
 						</Col>
 					</Form.Row>
+					<Form.Row>
+						<Col>
+							<Form.Control plaintext value={this.formatVal(this.parseInt(this.calculateMod(this.props.abilityScores.str)) + 
+								this.parseInt(this.props.savingThrows.str))} readOnly />
+						</Col>
+						<Col>
+							<Form.Control plaintext value={this.formatVal(this.parseInt(this.calculateMod(this.props.abilityScores.dex)) + 
+								this.parseInt(this.props.savingThrows.dex))} readOnly />
+						</Col>
+						<Col>
+							<Form.Control plaintext value={this.formatVal(this.parseInt(this.calculateMod(this.props.abilityScores.con)) + 
+								this.parseInt(this.props.savingThrows.con))} readOnly />
+						</Col>
+						<Col>
+							<Form.Control plaintext value={this.formatVal(this.parseInt(this.calculateMod(this.props.abilityScores.int)) + 
+								this.parseInt(this.props.savingThrows.int))} readOnly />
+						</Col>
+						<Col>
+							<Form.Control plaintext value={this.formatVal(this.parseInt(this.calculateMod(this.props.abilityScores.wis)) + 
+								this.parseInt(this.props.savingThrows.wis))} readOnly />
+						</Col>
+						<Col >
+							<Form.Control plaintext value={this.formatVal(this.parseInt(this.calculateMod(this.props.abilityScores.cha)) + 
+								this.parseInt(this.props.savingThrows.cha))} readOnly />
+						</Col>
+					</Form.Row>
 				</Form.Group>
 			</Form>
 		);
+	}
+
+	parseInt(val) {
+		let int = parseInt(val);
+		if (isNaN(int)) {
+			return 0;
+		}
+		return int;
+	}
+
+	calculateMod(score) {
+		return Math.floor((score - 10) / 2);
+	}
+
+	formatVal(val) {
+		return ((val >= 0) ? "+" : "") + val
 	}
 }
 
