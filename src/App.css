@@ -122,6 +122,14 @@
 	margin-bottom: 7px;
  }
 
+ .hr {
+	margin-top: 5px;
+  border-top: 2px solid #90291c; 
+	border-bottom: 4px solid #90291c; 
+	width: 350px;
+	max-width: 350px;
+}
+
  .tapered-divider-right {
 	width: 0;
 	height: 0;

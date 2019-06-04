@@ -54,15 +54,21 @@ class Renderer extends Component {
 
 	print = () => {
 		window.scrollTo(0, 0);
+		for (let i = 1; i <= 4; i++) {
+			document.getElementById("divider-" + i).className = "hr";
+		}
+
 		html2canvas(document.querySelector("#rendered")).then(canvas => {
-			// canvas.height="1000px"
-			// canvas.width="1000px"
 			var img = canvas.toDataURL()
 			var link = document.createElement("a");
 			link.setAttribute("href", img);
 			link.setAttribute("download", this.props.monster.monsterName);
 			link.click();
 		});
+		for (let i = 1; i <= 4; i++) {
+			document.getElementById("divider-" + i).className = "tapered-divider";
+		}
+		
 	}
 
 	render() {
@@ -107,18 +113,19 @@ class Renderer extends Component {
 						maxWidth: "380px" 
 						}}>
 
-					<h3 style={{ fontFamily: "URWBookman", fontSize: "25px", fontWeight: "heavier"}}>
+					<h3 style={{ fontFamily: "URWBookman", fontSize: "25px", fontWeight: "heavier", fontVariant: "small-caps"}}>
 						{monster.monsterName}
 					</h3>
 					<i style={{ color: "black" }}>{monster.size} {this.monsterType(monster)}, {monster.alignment.toLowerCase()}</i>
 
-					<div className={this.state.dividerDirection} />
+					{/* <img src="https://media-waterdeep.cursecdn.com/file-attachments/0/579/stat-block-header-bar.svg"/> */}
+					<div id="divider-1" className={this.state.dividerDirection} />
 					
 					<span><b>Armor Class </b>{monster.AC}{this.monsterACDesc(monster)}</span>
 					<span><b>Hit Points </b>{monster.HPFormat}</span>
 					<span><b>Speed </b>{this.speeds(monster)}</span>
 
-					<div className={this.state.dividerDirection} />
+					<div id="divider-2" className={this.state.dividerDirection} />
 
 					<div className="scores"> 
 						<Col style={{ textAlign: "center", padding: "0px", whiteSpace: "nowrap" }}>
@@ -153,7 +160,7 @@ class Renderer extends Component {
 						</Col>
 					</div>
 
-					<div className={this.state.dividerDirection} />
+					<div id="divider-3" className={this.state.dividerDirection} />
 
 					{this.senses(monster)}
 					{this.displaySaves(monster)}
@@ -165,7 +172,7 @@ class Renderer extends Component {
 					{this.simpleTrait(monster, "language", "Languages")}
 					<span><b>Challenge </b>{monster.CR} ({crXPMap[monster.CR + ""]} XP)</span>
 					
-					<div className={this.state.dividerDirection} />
+					<div id="divider-4" className={this.state.dividerDirection} />
 
 					{this.mainTrait(monster, "ability")}
 					{this.mainTrait(monster, "spellcasting")}
