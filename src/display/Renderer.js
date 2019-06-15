@@ -186,13 +186,13 @@ class Renderer extends Component {
 
 					<div id="divider-3" className={this.state.dividerDirection} />
 
-					{this.senses(monster)}
 					{this.displaySaves(monster)}
 					{this.simpleTrait(monster, "skill", "Skills")}
-					{this.simpleTrait(monster, "vulnerability", "Damage Vulnerabilities")}
 					{this.simpleTrait(monster, "resistance", "Damage Resistances")}
 					{this.simpleTrait(monster, "immunity", "Damage Immunity")}
+					{this.simpleTrait(monster, "vulnerability", "Damage Vulnerabilities")}
 					{this.simpleTrait(monster, "immunity--con", "Condition Immunities")}
+					{this.senses(monster)}
 					{this.simpleTrait(monster, "language", "Languages")}
 					<span><b>Challenge </b>{monster.CR} ({crXPMap[monster.CR + ""]} XP)</span>
 					
@@ -382,7 +382,7 @@ class Renderer extends Component {
 									{" " + this.doTarget(monster, trait)}.
 									<i> Hit: </i>
 									{this.calculateDamage(monster, trait) + " "}
-									({this.formatDamage(monster, trait)}).
+									({this.formatDamage(monster, trait)}) {(this.equals("No Type", trait.data.damageType)) ? "" : trait.data.damageType.toLowerCase()} damage.
 									{" " + trait.data.onHit}
 								</p>
 							)
@@ -613,7 +613,7 @@ class Renderer extends Component {
 	speeds(monster) {
 		let str = monster.speeds.walk + "ft."
 		for (const [key, value] of Object.entries(monster.speeds)) {
-			if (this.equals(key, "walk") || this.equals(key, "hover") || monster.speeds[key] === 0) {
+			if (this.equals(key, "walk") || this.equals(key, "hover") || parseInt(value) === 0) {
 				continue;
 			}
 
