@@ -4,6 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import html2canvas from 'html2canvas';
+import Form from 'react-bootstrap/Form'
 
 const crXPMap = {
 	"0": "10",
@@ -49,6 +50,8 @@ class Renderer extends Component {
 
 		this.state = {
 			dividerDirection: "tapered-divider",
+			columnCount: 1,
+			columnWidth: 380,
 		}
 	}
 
@@ -98,19 +101,40 @@ class Renderer extends Component {
 		}
 		console.log(display);
 		return (
-			<div style={{ color: "#90291c" }}>
-				<Button onClick={this.print}>
-					Print to PNG
-				</Button>
-				<Card id="rendered" 
+			<div style={{ color: "#90291c", columnGap: "0px"}}>
+				<Form.Row>
+					<Col>
+						<Button onClick={this.print}>
+							Print to PNG
+						</Button>
+					</Col>
+					<Col style={{color: "black"}}>
+						Columns
+					</Col>
+					<Col>
+						<Form.Control id="columns" type="number" step={1} value={this.state.columnCount} onChange={(e) => {
+							if (e.target.value >= 1 && e.target.value <= 2) {
+								if (e.target.value < this.state.columnCount) {
+									this.setState({columnWidth: this.state.columnWidth - 380})
+								} else if (e.target.value > this.state.columnCount) {
+									this.setState({columnWidth: this.state.columnWidth + 380})
+								}
+								this.setState({columnCount: e.target.value})
+								console.log(this.state)
+							}}} />
+					</Col>
+				</Form.Row>
+				<div style={{ columns: this.state.columnCount, columnGap: 0, width: this.state.columnWidth}}>
+					<Card id="rendered" 
 					style={{ 
 						textAlign: "left", 
 						position: "relative", 
 						padding: "10px", 
+						columnGap: "0px",
 						backgroundColor: "#fdf0dc", 
 						fontSize: "12px", 
 						width: "380px", 
-						maxWidth: "380px" 
+						maxWidth: "380px",
 						}}>
 
 					<h3 style={{ fontFamily: "URWBookman", fontSize: "25px", fontWeight: "heavier", fontVariant: "small-caps"}}>
@@ -192,6 +216,7 @@ class Renderer extends Component {
 					{this.displayLegendary(monster)}
 
 				</Card>
+				</div>
 			</div>)
 	}
 
