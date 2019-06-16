@@ -569,6 +569,10 @@ class App extends Component {
 					"9": 0,
 				},
 				spells: [],
+				innateUses: 0,
+				innatePeriod: "",
+				atWill: false,
+				innateSpells: [],
 			},
 		});
 	}

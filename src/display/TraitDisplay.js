@@ -194,7 +194,7 @@ class TraitDisplay extends Component {
 						Spell List
 					</Col>
 					<Col>
-						Spellcaster Level
+						{this.equals("Innate", trait.data.list) ? "" : "Spellcaster Level"}
 					</Col>
 					<Col>
 						Spellcasting Ability
@@ -211,10 +211,11 @@ class TraitDisplay extends Component {
 							<option>Ranger</option>
 							<option>Warlock</option>
 							<option>Wizard</option>
+							<option>Innate</option>
 						</Form.Control>
 					</Col>
 					<Col>
-						<Form.Control id="level" type="number" step={1} value={trait.data.level} onChange={this.editTraitZero}/>
+						{this.renderCasterLevel(trait)}
 					</Col>
 					<Col>
 						<Form.Control id="ability" as="select" onChange={this.editTrait} value={trait.data.ability}>
@@ -243,24 +244,56 @@ class TraitDisplay extends Component {
 						<Form.Control style={{textAlign: "center"}} value={this.formatSpellStats(trait, 8)} readOnly/>
 					</Col>
 				</Form.Row>
-				<SpellSlots onChange={this.editSpellSlots} slots={trait.data.slots}/>
+				{this.renderSpellSlots(trait)}
 				<Form.Row>
 					<Col>
-						<SpellList list={trait.data.spells} delete={this.deleteSpell}/>
+						<SpellList 
+							list={this.equals("Innate", trait.data.list) ? trait.data.innateSpells : trait.data.spells} 
+							delete={this.deleteSpell} 
+							innate={this.equals("Innate", trait.data.list)}/>
 					</Col>
 					<Col>
 						<SpellAdder 
 							spellLevel={trait.data.spellLevel}
 							spellName={trait.data.spellName}
+							innatePeriod={trait.data.innatePeriod}
+							innateUses={trait.data.innateUses}
 							selectedSpell={trait.data.selectedSpell}
 							onChangeLevel={this.editTraitClamp}
 							onChangeName={this.editTrait}
+							onChange={this.changeAtWill}
+							onChangePeriod={this.editTrait}
+							changeUses={this.editTraitZero}
+							atWill={trait.data.atWill}
 							addSpell={this.addSpell}
+							innate={this.equals("Innate", trait.data.list)}
 						/>
 					</Col>
 				</Form.Row>
 			</Form>
 		);
+	}
+
+	renderCasterLevel(trait) {
+		if (this.equals("Innate", trait.data.list)) {
+			return (<></>)
+		}
+		return (<Form.Control id="level" type="number" step={1} value={trait.data.level} onChange={this.editTraitZero}/>)
+	}
+
+	changeAtWill = () => {
+		let trait = this.props.trait;
+
+		trait.data.atWill = !trait.data.atWill;
+
+		this.props.editTrait(trait);
+	}
+
+	renderSpellSlots(trait) {
+		if (this.equals("Innate", trait.data.list)) {
+			return (<></>)
+		}
+		return (<SpellSlots onChange={this.editSpellSlots} slots={trait.data.slots} />)
 	}
 
 	editLegendary = (e) => {
@@ -398,39 +431,74 @@ class TraitDisplay extends Component {
 		return value;
 	}
 
-	deleteSpell = (name, level) => {
+	deleteSpell = (innate, spell) => {
+		if (!innate) {
+			for (let i = 0; i < this.props.trait.data.spells.length; i++) {
+				let spell2 = this.props.trait.data.spells[i];
 
-		for (let i = 0; i < this.props.trait.data.spells.length; i++) {
-			let spell = this.props.trait.data.spells[i];
+				if (this.equals(spell2.name, spell.name) && spell2.level === spell.level) {
+					let trait = this.props.trait;				
 
-			if (this.equals(spell.name, name) && spell.level === level) {
-				let trait = this.props.trait;				
+					trait.data.spells.splice(trait.data.spells.indexOf(spell2), 1);
+					trait.selectedSpell = null;
+					this.props.editTrait(trait);
+				}
+			}
+		} else {
+			for (let i = 0; i < this.props.trait.data.innateSpells.length; i++) {
+				let spell2 = this.props.trait.data.innateSpells[i];
+				console.log("spell2", spell2)
+				console.log("spell", spell)
+				if (this.equals(spell2.name, spell.name) && spell2.uses === spell.uses && this.equals(spell2.period, spell.period) && spell2.atWill === spell.atWill) {
+					let trait = this.props.trait;				
 
-				trait.data.spells.splice(trait.data.spells.indexOf(spell), 1);
-				trait.selectedSpell = null;
-				this.props.editTrait(trait);
+					trait.data.innateSpells.splice(trait.data.innateSpells.indexOf(spell2), 1);
+					trait.selectedSpell = null;
+					this.props.editTrait(trait);
+				}
 			}
 		}
 	}
 
-	addSpell = () => {
+	addSpell = (id) => {
 		let trait = this.props.trait;
 
-		for (let i = 0; i < trait.data.spells.length; i++) {
-			if (this.equals(trait.data.spells[i].name, trait.data.spellName) && 
-				trait.data.spells[i].level === trait.data.spellLevel) {
-				return;
+		if (this.equals(id, "innate")) {
+			for (let i = 0; i < trait.data.innateSpells.length; i++) {
+				if (this.equals(trait.data.innateSpells[i].name, trait.data.spellName) && 
+					trait.data.innateSpells[i].uses === trait.data.innateUses &&
+					this.equals(trait.data.innateSpells[i].period, trait.data.innatePeriod)) {
+					return;
+				}
 			}
+	
+			trait.data.innateSpells.push({
+				uses: trait.data.innateUses,
+				period: trait.data.innatePeriod,
+				name: trait.data.spellName,
+				atWill: trait.data.atWill,
+			});
+	
+			trait.data.innateUses = 0;
+			trait.data.innatePeriod = "";
+			trait.data.name = "";
+			trait.data.atWill = false;
+		} else {
+			for (let i = 0; i < trait.data.spells.length; i++) {
+				if (this.equals(trait.data.spells[i].name, trait.data.spellName) && 
+					trait.data.spells[i].level === trait.data.spellLevel) {
+					return;
+				}
+			}
+	
+			trait.data.spells.push({
+				level: trait.data.spellLevel,
+				name: trait.data.spellName,
+			});
+	
+			trait.data.spellName = "";
+			trait.data.spellLevel = 1;
 		}
-
-		trait.data.spells.push({
-			level: trait.data.spellLevel,
-			name: trait.data.spellName,
-		});
-
-		trait.data.spellName = "";
-		trait.data.spellLevel = 1;
-
 
 		this.props.editTrait(trait);
 	}

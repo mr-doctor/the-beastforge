@@ -387,6 +387,7 @@ class Renderer extends Component {
 								</p>
 							)
 						case "spellcasting":
+							if (!this.equals(trait.data.list.toLowerCase(), "innate")) {
 								return (
 									<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "10px" }}>
 										<b><i>{trait.name}. </i></b>
@@ -399,6 +400,17 @@ class Renderer extends Component {
 
 									</p>
 								)
+							} else {
+								return (
+									<p style={{ color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "10px" }}>
+										<b><i>Innate {trait.name}. </i></b>
+										{"The creature's innate spellcasting ability is " + trait.data.ability + " (spell save DC " + 
+										this.calculateSpellDC(monster, trait) + ", " + this.formatVal(this.calculateSpellToHit(monster, trait)) + 
+										" to hit with spell attacks). The creature can innately cast the following spells, requiring no material components:"}
+										{this.formatSpells(monster, trait)}
+									</p>
+								)
+							}
 						default:
 							return (<></>);
 					}
@@ -419,7 +431,7 @@ class Renderer extends Component {
 			let spell = spells[i];
 			spellsBreakdown[spell.level].push(spell);
 		}
-		console.log(spellsBreakdown)
+		// console.log(spellsBreakdown)
 
 		return (
 			<>
