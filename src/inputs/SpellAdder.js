@@ -29,6 +29,8 @@ class SpellAdder extends Component {
 					placement="bottom"
 					container={this}
 					containerPadding={20}
+					rootClose
+					onHide={() => this.setState({show: false})}
 				>
 					{() => {
 						if (!this.props.innate) {
@@ -55,7 +57,7 @@ class SpellAdder extends Component {
 								</Popover>)
 						} else {
 							return (
-								<Popover id="popover-contained" title="Create New Spell">
+								<Popover id="popover-contained" title="Create New Spell" className="">
 									<Form.Row>
 										<Form.Control id="spellName" type="text" step={1} placeholder="Spell Name" value={this.props.spellName} onChange={this.props.onChangeName} />
 									</Form.Row>
@@ -92,15 +94,20 @@ class SpellAdder extends Component {
 		if (atWill) {
 			return (<></>)
 		} else {
-			console.log("reeee")
 			return (<>
 				<Col>
 					<Form.Control id="innateUses" type="number" step={1} value={this.props.innateUses} onChange={this.props.changeUses} />
 				</Col>
-				per
-				< Col >
-					<Form.Control id="innatePeriod" type="text" step={1} value={this.props.innatePeriod} onChange={this.props.onChangePeriod} />
-				</Col>
+				per Day
+				{/* < Col >
+					<Form.Control id="innatePeriod" as="select" value={this.props.innatePeriod} onChange={this.props.onChangePeriod}>
+						<option>Day</option>
+						<option>Short Rest</option>
+						<option>Hour</option>
+						<option>Minute</option>
+						<option>Round</option>
+					</Form.Control>
+				</Col> */}
 			</>)
 		}
 	}

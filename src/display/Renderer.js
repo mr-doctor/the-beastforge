@@ -82,7 +82,6 @@ class Renderer extends Component {
 			legendary: false,
 		}
 		for (let i = 0; i < monster.traits.length; i++) {
-			console.log(monster.traits[i].type);
 			switch(monster.traits[i].type) {
 				case "action":
 				case "attack":
@@ -99,7 +98,6 @@ class Renderer extends Component {
 					break;
 			}
 		}
-		console.log(display);
 		return (
 			<div style={{ color: "#90291c", columnGap: "0px"}}>
 				<Form.Row>
@@ -120,7 +118,6 @@ class Renderer extends Component {
 									this.setState({columnWidth: this.state.columnWidth + 380})
 								}
 								this.setState({columnCount: e.target.value})
-								console.log(this.state)
 							}}} />
 					</Col>
 				</Form.Row>
@@ -396,7 +393,7 @@ class Renderer extends Component {
 										this.calculateSpellDC(monster, trait) + ", " + this.formatVal(this.calculateSpellToHit(monster, trait)) + 
 										" to hit with spell attacks). The creature has the following " + trait.data.list.toLowerCase() + 
 										" spells prepared:"}
-										{this.formatSpells(monster, trait)}
+										{this.formatSpells(monster, trait, false)}
 
 									</p>
 								)
@@ -407,7 +404,7 @@ class Renderer extends Component {
 										{"The creature's innate spellcasting ability is " + trait.data.ability + " (spell save DC " + 
 										this.calculateSpellDC(monster, trait) + ", " + this.formatVal(this.calculateSpellToHit(monster, trait)) + 
 										" to hit with spell attacks). The creature can innately cast the following spells, requiring no material components:"}
-										{this.formatSpells(monster, trait)}
+										{this.formatSpells(monster, trait, true)}
 									</p>
 								)
 							}
@@ -420,30 +417,99 @@ class Renderer extends Component {
 		)
 	}
 
-	formatSpells(monster, trait) {
-		let spells = trait.data.spells;
+	formatSpells(monster, trait, innate) {
+		if (!innate) {
+			let spells = trait.data.spells;
 
-		let spellsBreakdown = [
-			[],[],[],[],[],[],[],[],[],[]
-		];
+			let spellsBreakdown = [
+				[],[],[],[],[],[],[],[],[],[]
+			];
 
-		for (let i = 0; i < spells.length; i++) {
-			let spell = spells[i];
-			spellsBreakdown[spell.level].push(spell);
+			for (let i = 0; i < spells.length; i++) {
+				let spell = spells[i];
+				spellsBreakdown[spell.level].push(spell);
+			}
+
+			return (
+				<>
+					{spellsBreakdown.map((spellList) => {
+						return (
+							<p style={{ textIndent: "5px", color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "0px" }}>
+								{this.formatSpellLevel(trait, spellsBreakdown.indexOf(spellList))}
+							</p>
+						)
+					})}
+				</>
+			)
+		} else {
+			let spells = trait.data.innateSpells;
+			
+			let spellBreakdown = new Map();
+
+			for (let i = 0; i < spells.length; i++) {
+				let spell = spells[i];
+				if (spellBreakdown.has(this.formatSpellPeriod(spell))) {
+					let newSpells = spellBreakdown.get(this.formatSpellPeriod(spell));
+					newSpells.push(spell);
+					spellBreakdown.set(this.formatSpellPeriod(spell), newSpells);
+				} else {
+					spellBreakdown.set(this.formatSpellPeriod(spell), [spell]);
+				}
+			}
+			let keys = Array.from(spellBreakdown.keys());
+
+			keys.sort((a, b) => {
+				if (this.equals(a, "At will")) {
+					return -1;
+				} else if (this.equals(b, "At will")) {
+					return 1;
+				}
+				return parseInt(a.split("/")[0]) - parseInt(b.split("/")[0]);
+			});
+
+			return (
+				<>
+					{keys.map((key) => {
+						return (
+							<p style={{ textIndent: "5px", color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "0px" }}>
+								{this.formatSpellInnate(spellBreakdown.get(key), key)}
+							</p>
+						)
+					})}
+				</>
+			)
 		}
-		// console.log(spellsBreakdown)
+	}
+
+	formatSpellInnate(spells, key) {
+		spells.sort((a, b) => {
+			if (a < b) return -1;
+			else if (a > b) return 1;
+			return 0;
+		});
+		let str = key + ((spells.length === 1) ? "" : " each") + ": ";
+		if (this.equals(key, "At will")) {
+			str = "At will: "
+		}
 
 		return (
-			<>
-				{spellsBreakdown.map((spellList) => {
+			<>{str}
+				{spells.map((spell) => {
 					return (
-						<p style={{ textIndent: "5px", color: "black", wordBreak: "break-word", padding: "0px", marginBottom: "0px" }}>
-							{this.formatSpellLevel(trait, spellsBreakdown.indexOf(spellList))}
-						</p>
+						<span>
+							<i>{spell.name}</i>{((spells.indexOf(spell) === spells.length - 1) ? "" : ", ")}
+						</span>
 					)
 				})}
-			</>
-		)
+			</>);
+
+	}
+
+	formatSpellPeriod(spell) {
+		if (spell.atWill) {
+			return "At will";
+		}
+		return spell.uses + "/" + spell.period;
 	}
 
 	formatSpellLevel(trait, level) {

@@ -479,9 +479,9 @@ class TraitDisplay extends Component {
 				atWill: trait.data.atWill,
 			});
 	
-			trait.data.innateUses = 0;
-			trait.data.innatePeriod = "";
-			trait.data.name = "";
+			trait.data.innateUses = 1;
+			trait.data.innatePeriod = "Day";
+			trait.data.spellName = "";
 			trait.data.atWill = false;
 		} else {
 			for (let i = 0; i < trait.data.spells.length; i++) {
