@@ -28,12 +28,14 @@ class ConditionMod extends Component {
 										<option>Exhaustion</option>
 										<option>Frightened</option>
 										<option>Grappled</option>
+										<option>Incapacitated</option>
 										<option>Incorporeal</option>
 										<option>Intoxicated</option>
 										<option>Invisible</option>
 										<option>Paralysed</option>
 										<option>Petrified</option>
 										<option>Poisoned</option>
+										<option>Prone</option>
 										<option>Restrained</option>
 										<option>Stunned</option>
 										<option>Unconscious</option>
