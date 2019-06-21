@@ -33,7 +33,6 @@ class ConditionMod extends Component {
 										<option>Invisible</option>
 										<option>Paralysed</option>
 										<option>Petrified</option>
-										<option>Petrified</option>
 										<option>Poisoned</option>
 										<option>Restrained</option>
 										<option>Stunned</option>
