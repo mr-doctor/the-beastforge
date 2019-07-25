@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import { API } from '../App'
 
-class Saver extends Component {
+class Login extends Component {
 
 	render() {
 		return (
@@ -15,9 +15,11 @@ class Saver extends Component {
 	}
 
 	login = () => {
+		// localStorage.setItem("monster", JSON.stringify(this.props.monster));
 		console.log("API", API);
-		window.location = API + '/login?redirect=' + window.location.href
+		window.location = API + '/login?redirect=' + window.location.href;
+
 	}
 }
 
-export default Saver;
+export default Login;

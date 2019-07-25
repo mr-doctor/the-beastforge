@@ -40,7 +40,12 @@ class Saver extends Component {
 	}
 
 	save = () => {
-		
+
+		console.log("API", API);
+		window.location = API + '/login?redirect=' + window.location.href
+
+
+
 		fetch(API + '/save_monster', {
 			method: 'POST',
 			headers: {

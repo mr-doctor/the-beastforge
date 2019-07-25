@@ -42,7 +42,15 @@ class App extends Component {
 
 		this.state = this.newState()
 		this.update();
+
+		let j = localStorage.getItem("monster");
+		if (j !== null && j !== "undefined") {
+			console.log(j);
+			this.state = JSON.parse(j);
+		}
 	}
+
+	
 
 	newState() {
 		return {
@@ -138,6 +146,8 @@ class App extends Component {
 	}
 
 	render() {
+		localStorage.setItem("monster", JSON.stringify(this.state));
+
 		return (
 			<Router>
 				<Route exact path="/" component={this.HomePage}/>
@@ -186,7 +196,7 @@ class App extends Component {
 								</Link>
 							</Col>
 							<Col style={{display: "flex"}}>
-								<Login/>
+								<Login monster={this.state}/>
 							</Col>
 						</Form.Row>
 						<CardGroup>
