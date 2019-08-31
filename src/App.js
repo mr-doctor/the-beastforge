@@ -29,11 +29,12 @@ import Login from './manage/Login';
 import Renderer from './display/Renderer';
 
 export const MAX_NUMBER = 4096;
-export const API = "https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod";
-// export const API = "http://127.0.0.1:5000";
+// export const API = "https://jhxwb4ferb.execute-api.us-west-2.amazonaws.com/prod";
+export const API = "http://127.0.0.1:5000";
 
 class App extends Component {
 
+	edit = false;
 
 	constructor(props) {
 		super(props);
@@ -49,8 +50,6 @@ class App extends Component {
 			this.state = JSON.parse(j);
 		}
 	}
-
-	
 
 	newState() {
 		return {
@@ -132,6 +131,10 @@ class App extends Component {
 		console.log("update", window.location)
 		if (window.location.pathname.startsWith('/monster/')){ 
 			let monsterId = window.location.pathname.replace("/monster/", "");
+			if (monsterId.includes("/edit")) {
+				this.edit = true;
+				monsterId.replace("/edit", "");
+			}
 			let monsterURL = 'https://the-beastforge-monsters.s3-us-west-2.amazonaws.com/' + monsterId + '.json';
 
 			fetch(monsterURL).then(res => res.json()) 
@@ -143,6 +146,13 @@ class App extends Component {
 			  }
 			)
 		}
+	}
+
+	getMonsterId = () => {
+		if (window.location.pathname.startsWith('/monster/')){ 
+			return window.location.pathname.replace("/monster/", "").monsterId.replace("/edit", "");
+		}
+		return "no_id";
 	}
 
 	render() {
@@ -186,7 +196,7 @@ class App extends Component {
 								</Button>
 							</Col>
 							<Col style={{display: "flex"}}>
-								<Saver monster={this.state}/>
+								<Saver edit={this.edit} monster_id={this.getMonsterId} monster={this.state}/>
 							</Col>
 							<Col style={{display: "flex"}}>
 								<Link to="/monster-list">

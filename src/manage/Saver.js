@@ -53,7 +53,7 @@ class Saver extends Component {
 				'Content-Type': 'application/json',
 			},
 			credentials: 'include',
-			body: JSON.stringify(this.props.monster)
+			body: JSON.stringify({data: this.props.monster, edit: this.props.edit, id: this.props.monster_id})
 		})
 		.then(res => res.json())
 		.then(

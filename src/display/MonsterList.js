@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup'
 import { Link } from 'react-router-dom';
 import { API } from '../App';
+import Button from 'react-bootstrap/Button';
 
 class MonsterList extends Component {
 	constructor(props) {
@@ -24,11 +25,14 @@ class MonsterList extends Component {
 			<ListGroup className="list-group">
 				{this.state.monsters.map((monster) => {
 					return (
-						<Link to={"/monster/" + monster.monster_id}>
-							<ListGroup.Item action key={monster.monster_id}>
+						
+							<ListGroup.Item action key={monster.monster_id} className="monster-list-item">
 								{monster.name}
+								<span>
+									<Link style={{padding: "5px"}} to={"/monster/" + monster.monster_id}><Button>Load Copy</Button></Link>
+									<Link style={{padding: "5px"}} to={"/monster/" + monster.monster_id + "/edit"}><Button>Edit</Button></Link>
+								</span>
 							</ListGroup.Item>
-						</Link>
 					)
 				})
 				}

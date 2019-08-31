@@ -60,6 +60,7 @@ class ConditionMod extends Component {
 								<Col xs={5}>
 									<Form.Control id="damage-select" as="select" onChange={this.props.changeDamageModType}>
 										<option>Bludgeoning</option>
+										<option>Cold</option>
 										<option>Fire</option>
 										<option>Force</option>
 										<option>Lightning</option>
